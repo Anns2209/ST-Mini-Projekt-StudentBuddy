@@ -1,0 +1,20 @@
+[
+  {
+    "serverId": "87f261e8-aa81-465f-b077-02e2a24d0c46",
+    "title": "pripravi pwa app",
+    "subject": "spletne tehnologije",
+    "dueDate": "2026-06-11",
+    "priority": "medium",
+    "createdAt": "2026-05-12T12:54:25.750Z",
+    "syncedAt": "2026-05-12T12:54:25.799Z"
+  },
+  {
+    "serverId": "8b23034a-ba8f-4ada-97a6-5b535699a5ba",
+    "title": "projekt tzva",
+    "subject": "tzva",
+    "dueDate": "2026-06-04",
+    "priority": "low",
+    "createdAt": "2026-05-12T12:55:03.878Z",
+    "syncedAt": "2026-05-12T12:55:03.910Z"
+  }
+]

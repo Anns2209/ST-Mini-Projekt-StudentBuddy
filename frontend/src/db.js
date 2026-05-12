@@ -103,8 +103,39 @@ async function deleteTaskFromDB(id) {
   });
 }
 
+async function updateTaskInDB(task) {
+  const db = await openStudySyncDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(TASK_STORE, "readwrite");
+    const store = transaction.objectStore(TASK_STORE);
+
+    const request = store.put(task);
+
+    request.onsuccess = () => {
+      resolve(request.result);
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+
+    transaction.oncomplete = () => {
+      db.close();
+    };
+  });
+}
+
+async function getUnsyncedTasksFromDB() {
+  const tasks = await getAllTasksFromDB();
+
+  return tasks.filter(task => task.synced === false);
+}
+
 window.studySyncDB = {
   addTask: addTaskToDB,
   getAllTasks: getAllTasksFromDB,
-  deleteTask: deleteTaskFromDB
+  deleteTask: deleteTaskFromDB,
+  updateTask: updateTaskInDB,
+  getUnsyncedTasks: getUnsyncedTasksFromDB
 };

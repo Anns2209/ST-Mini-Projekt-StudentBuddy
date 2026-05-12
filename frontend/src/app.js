@@ -1,3 +1,4 @@
+const API_BASE_URL = "http://localhost:3000/api";
 const connectionStatus = document.getElementById("connection-status");
 const taskForm = document.getElementById("task-form");
 const taskList = document.getElementById("task-list");
@@ -224,6 +225,55 @@ function createTaskElement(task) {
   return li;
 }
 
+async function sendTaskToServer(task) {
+  const response = await fetch(`${API_BASE_URL}/tasks`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      title: task.title,
+      subject: task.subject,
+      dueDate: task.dueDate,
+      priority: task.priority,
+      createdAt: task.createdAt
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Naloge ni bilo mogoče poslati na strežnik.");
+  }
+
+  return response.json();
+}
+
+async function syncUnsyncedTasks() {
+  if (!navigator.onLine) {
+    return;
+  }
+
+  try {
+    const unsyncedTasks = await window.studySyncDB.getUnsyncedTasks();
+
+    for (const task of unsyncedTasks) {
+      const result = await sendTaskToServer(task);
+
+      const updatedTask = {
+        ...task,
+        synced: true,
+        serverId: result.task.serverId,
+        syncedAt: result.task.syncedAt
+      };
+
+      await window.studySyncDB.updateTask(updatedTask);
+    }
+
+    await renderTasks();
+  } catch (error) {
+    console.error("Napaka pri sinhronizaciji:", error);
+  }
+}
+
 async function renderTasks() {
   try {
     const tasks = await window.studySyncDB.getAllTasks();
@@ -254,7 +304,11 @@ async function renderTasks() {
   }
 }
 
-window.addEventListener("online", updateConnectionStatus);
+window.addEventListener("online", async () => {
+  updateConnectionStatus();
+  await syncUnsyncedTasks();
+});
+
 window.addEventListener("offline", updateConnectionStatus);
 
 updateConnectionStatus();
@@ -284,6 +338,10 @@ taskForm.addEventListener("submit", async function (event) {
     clearFormErrors();
 
     await renderTasks();
+    
+    if (navigator.onLine) {
+      await syncUnsyncedTasks();
+    }
   } catch (error) {
     console.error("Napaka pri shranjevanju naloge:", error);
   }
@@ -301,3 +359,7 @@ if ("serviceWorker" in navigator) {
 }
 
 renderTasks();
+
+if (navigator.onLine) {
+  syncUnsyncedTasks();
+}
