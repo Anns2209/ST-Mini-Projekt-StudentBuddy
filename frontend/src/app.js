@@ -15,34 +15,49 @@ function updateConnectionStatus() {
 function clearFormErrors() {
   const titleInput = document.getElementById("task-title");
   const subjectInput = document.getElementById("task-subject");
+  const dueDateInput = document.getElementById("task-due-date");
+  const priorityInput = document.getElementById("task-priority");
 
   const titleError = document.getElementById("task-title-error");
   const subjectError = document.getElementById("task-subject-error");
+  const dueDateError = document.getElementById("task-due-date-error");
+  const priorityError = document.getElementById("task-priority-error");
 
   const errorSummary = document.getElementById("form-error-summary");
   const errorList = document.getElementById("form-error-list");
 
   titleError.textContent = "";
   subjectError.textContent = "";
+  dueDateError.textContent = "";
+  priorityError.textContent = "";
+
   errorList.innerHTML = "";
   errorSummary.hidden = true;
 
   titleInput.removeAttribute("aria-invalid");
   subjectInput.removeAttribute("aria-invalid");
+  dueDateInput.removeAttribute("aria-invalid");
+  priorityInput.removeAttribute("aria-invalid");
 }
 
 function validateTaskForm() {
   const titleInput = document.getElementById("task-title");
   const subjectInput = document.getElementById("task-subject");
+  const dueDateInput = document.getElementById("task-due-date");
+  const priorityInput = document.getElementById("task-priority");
 
   const titleError = document.getElementById("task-title-error");
   const subjectError = document.getElementById("task-subject-error");
+  const dueDateError = document.getElementById("task-due-date-error");
+  const priorityError = document.getElementById("task-priority-error");
 
   const errorSummary = document.getElementById("form-error-summary");
   const errorList = document.getElementById("form-error-list");
 
   const title = titleInput.value.trim();
   const subject = subjectInput.value.trim();
+  const dueDate = dueDateInput.value;
+  const priority = priorityInput.value;
 
   let hasError = false;
 
@@ -50,7 +65,6 @@ function validateTaskForm() {
 
   if (!title) {
     hasError = true;
-
     titleError.textContent = "Vnesi naslov naloge.";
     titleInput.setAttribute("aria-invalid", "true");
 
@@ -61,7 +75,6 @@ function validateTaskForm() {
 
   if (!subject) {
     hasError = true;
-
     subjectError.textContent = "Vnesi predmet.";
     subjectInput.setAttribute("aria-invalid", "true");
 
@@ -70,31 +83,91 @@ function validateTaskForm() {
     errorList.appendChild(li);
   }
 
+  if (!dueDate) {
+    hasError = true;
+    dueDateError.textContent = "Izberi rok naloge.";
+    dueDateInput.setAttribute("aria-invalid", "true");
+
+    const li = document.createElement("li");
+    li.innerHTML = '<a href="#task-due-date">Rok naloge je obvezen.</a>';
+    errorList.appendChild(li);
+  }
+
+  if (!priority) {
+    hasError = true;
+    priorityError.textContent = "Izberi prioriteto naloge.";
+    priorityInput.setAttribute("aria-invalid", "true");
+
+    const li = document.createElement("li");
+    li.innerHTML = '<a href="#task-priority">Prioriteta je obvezna.</a>';
+    errorList.appendChild(li);
+  }
+
   if (hasError) {
     errorSummary.hidden = false;
     errorSummary.focus();
 
     return {
-      isValid: false,
-      title: "",
-      subject: ""
+      isValid: false
     };
   }
 
   return {
     isValid: true,
     title,
-    subject
+    subject,
+    dueDate,
+    priority
   };
 }
 
-function formatDate(dateString) {
+function formatDateTime(dateString) {
   const date = new Date(dateString);
 
   return date.toLocaleString("sl-SI", {
     dateStyle: "medium",
     timeStyle: "short"
   });
+}
+
+function formatDateOnly(dateString) {
+  const date = new Date(dateString);
+
+  return date.toLocaleDateString("sl-SI", {
+    dateStyle: "medium"
+  });
+}
+
+function getPriorityText(priority) {
+  if (priority === "low") {
+    return "Nizka prioriteta";
+  }
+
+  if (priority === "medium") {
+    return "Srednja prioriteta";
+  }
+
+  if (priority === "high") {
+    return "Visoka prioriteta";
+  }
+
+  return "Prioriteta ni določena";
+}
+
+function getPriorityClass(priority) {
+  if (priority === "low") {
+    return "priority-low";
+  }
+
+  if (priority === "medium") {
+    return "priority-medium";
+  }
+
+  if (priority === "high") {
+    return "priority-high";
+  }
+
+  return "";
 }
 
 function createTaskElement(task) {
@@ -110,7 +183,15 @@ function createTaskElement(task) {
 
   const meta = document.createElement("span");
   meta.className = "task-meta";
-  meta.textContent = `${task.subject} · dodano ${formatDate(task.createdAt)}`;
+  meta.textContent = `${task.subject} · dodano ${formatDateTime(task.createdAt)}`;
+
+  const dueDate = document.createElement("span");
+  dueDate.className = "due-date";
+  dueDate.textContent = `Rok: ${formatDateOnly(task.dueDate)}`;
+
+  const priority = document.createElement("span");
+  priority.className = `priority-label ${getPriorityClass(task.priority)}`;
+  priority.textContent = getPriorityText(task.priority);
 
   const syncStatus = document.createElement("span");
   syncStatus.className = task.synced ? "sync-status synced" : "sync-status pending";
@@ -118,6 +199,8 @@ function createTaskElement(task) {
 
   content.appendChild(title);
   content.appendChild(meta);
+  content.appendChild(dueDate);
+  content.appendChild(priority);
   content.appendChild(syncStatus);
 
   const deleteButton = document.createElement("button");
@@ -188,6 +271,8 @@ taskForm.addEventListener("submit", async function (event) {
   const newTask = {
     title: validation.title,
     subject: validation.subject,
+    dueDate: validation.dueDate,
+    priority: validation.priority,
     createdAt: new Date().toISOString(),
     synced: false
   };

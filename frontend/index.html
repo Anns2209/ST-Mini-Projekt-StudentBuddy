@@ -103,6 +103,40 @@
     <p id="task-subject-error" class="error-message" aria-live="polite"></p>
   </div>
 
+  <div class="form-group">
+  <label for="task-due-date">Rok naloge <span aria-hidden="true">*</span></label>
+  <p id="task-due-date-hint" class="input-hint">
+    Izberi datum, do kdaj mora biti naloga opravljena.
+  </p>
+  <input 
+    type="date" 
+    id="task-due-date" 
+    name="task-due-date" 
+    required
+    aria-describedby="task-due-date-hint task-due-date-error"
+  />
+  <p id="task-due-date-error" class="error-message" aria-live="polite"></p>
+</div>
+
+<div class="form-group">
+  <label for="task-priority">Prioriteta <span aria-hidden="true">*</span></label>
+  <p id="task-priority-hint" class="input-hint">
+    Izberi, kako pomembna je naloga.
+  </p>
+  <select 
+    id="task-priority" 
+    name="task-priority" 
+    required
+    aria-describedby="task-priority-hint task-priority-error"
+  >
+    <option value="">Izberi prioriteto</option>
+    <option value="low">Nizka</option>
+    <option value="medium">Srednja</option>
+    <option value="high">Visoka</option>
+  </select>
+  <p id="task-priority-error" class="error-message" aria-live="polite"></p>
+</div>
+
   <button type="submit">Dodaj nalogo</button>
 </form>
 

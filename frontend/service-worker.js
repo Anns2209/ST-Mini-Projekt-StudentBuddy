@@ -1,4 +1,4 @@
-const CACHE_NAME = "studysync-cache-2";
+const CACHE_NAME = "studysync-cache-v3";
 
 const STATIC_FILES = [
   "/",

@@ -65,15 +65,18 @@ label {
   margin-bottom: 0.35rem;
 }
 
-input {
+input,
+select {
   width: 100%;
   padding: 0.8rem;
   border: 2px solid #cbd5e1;
   border-radius: 0.5rem;
   font-size: 1rem;
+  background: white;
 }
 
 input:focus,
+select:focus,
 button:focus {
   outline: 3px solid #facc15;
   outline-offset: 3px;
@@ -167,6 +170,7 @@ button:hover {
 .main-nav a:focus,
 a:focus,
 input:focus,
+select:focus,
 button:focus {
   outline: 3px solid #facc15;
   outline-offset: 3px;
@@ -299,4 +303,39 @@ input[aria-invalid="true"] {
   .delete-button {
     width: 100%;
   }
+}
+
+.priority-label {
+  display: inline-block;
+  width: fit-content;
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: bold;
+}
+
+.priority-low {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.priority-medium {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.priority-high {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.due-date {
+  color: #334155;
+  font-size: 0.95rem;
+}
+
+input[aria-invalid="true"],
+select[aria-invalid="true"] {
+  border-color: #991b1b;
+  background: #fff7f7;
 }
