@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>StudySync</title>
+
+  <link rel="stylesheet" href="./src/styles.css" />
+  <link rel="manifest" href="./manifest.json" />
+
+  <meta name="theme-color" content="#2563eb" />
+</head>
+
+<body>
+  <a href="#main-content" class="skip-link">Preskoči na glavno vsebino</a>
+
+  <header class="app-header">
+    <h1>StudySync</h1>
+    <p>Dostopen študentski planer, ki deluje tudi brez povezave.</p>
+  </header>
+
+  <nav class="main-nav" aria-label="Glavna navigacija">
+    <ul>
+        <li><a href="#today-title">Pregled</a></li>
+        <li><a href="#task-form-title">Naloge</a></li>
+        <li><a href="#accessibility-info">Dostopnost</a></li>
+    </ul>
+  </nav>
+
+  <main id="main-content" class="container">
+    <section class="status-card" aria-labelledby="connection-title">
+      <h2 id="connection-title">Stanje povezave</h2>
+      <p id="connection-status" role="status" aria-live="polite">
+        Preverjam povezavo ...
+      </p>
+    </section>
+
+    <section class="dashboard" aria-labelledby="today-title">
+      <h2 id="today-title">Današnji pregled</h2>
+
+      <div class="cards">
+        <article class="card">
+          <h3>Naslednja naloga</h3>
+          <p>Dodaj svojo prvo nalogo za predmet.</p>
+        </article>
+
+        <article class="card">
+          <h3>Zapiski</h3>
+          <p>Ustvari zapiske, ki bodo dostopni tudi brez interneta.</p>
+        </article>
+
+        <article class="card">
+          <h3>Opomniki</h3>
+          <p>Kasneje bomo dodali push obvestila za pomembne roke.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="form-section" aria-labelledby="task-form-title">
+      <h2 id="task-form-title">Dodaj testno nalogo</h2>
+
+      
+<form id="task-form" novalidate>
+  <p class="form-hint">
+    Polja, označena z zvezdico, so obvezna.
+  </p>
+
+  <div id="form-error-summary" class="error-summary" tabindex="-1" hidden>
+    <h3>Napake v obrazcu</h3>
+    <ul id="form-error-list"></ul>
+  </div>
+
+  <div class="form-group">
+    <label for="task-title">Naslov naloge <span aria-hidden="true">*</span></label>
+    <p id="task-title-hint" class="input-hint">
+      Vpiši kratek in jasen naslov naloge.
+    </p>
+    <input 
+      type="text" 
+      id="task-title" 
+      name="task-title" 
+      placeholder="Npr. Pripravi PWA dokumentacijo"
+      required
+      aria-describedby="task-title-hint task-title-error"
+    />
+    <p id="task-title-error" class="error-message" aria-live="polite"></p>
+  </div>
+
+  <div class="form-group">
+    <label for="task-subject">Predmet <span aria-hidden="true">*</span></label>
+    <p id="task-subject-hint" class="input-hint">
+      Vpiši predmet, na katerega se naloga nanaša.
+    </p>
+    <input 
+      type="text" 
+      id="task-subject" 
+      name="task-subject" 
+      placeholder="Npr. Mobilna interakcija"
+      required
+      aria-describedby="task-subject-hint task-subject-error"
+    />
+    <p id="task-subject-error" class="error-message" aria-live="polite"></p>
+  </div>
+
+  <button type="submit">Dodaj nalogo</button>
+</form>
+
+      <ul 
+        id="task-list" 
+        class="task-list" 
+        aria-live="polite" 
+        aria-label="Seznam dodanih nalog">
+      </ul>
+    </section>
+
+    <section id="accessibility-info" class="accessibility-section" aria-labelledby="accessibility-title">
+  <h2 id="accessibility-title">Dostopnost aplikacije</h2>
+  <p>
+    Aplikacija je zasnovana tako, da podpira uporabo s tipkovnico, jasen fokus,
+    semantičen HTML, dostopna sporočila in uporabo z bralniki zaslona.
+  </p>
+</section>
+  </main>
+
+  <script src="./src/db.js"></script>
+  <script src="./src/app.js"></script>
+</body>
+</html>
