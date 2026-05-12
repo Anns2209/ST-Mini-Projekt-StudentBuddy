@@ -42,7 +42,7 @@ app.get("/api/tasks", async (req, res) => {
 });
 
 app.post("/api/tasks", async (req, res) => {
-  const { title, subject, dueDate, priority, createdAt } = req.body;
+  const { clientId, title, subject, dueDate, priority, createdAt } = req.body;
 
   if (!title || !subject || !dueDate || !priority) {
     return res.status(400).json({
@@ -51,9 +51,20 @@ app.post("/api/tasks", async (req, res) => {
   }
 
   const tasks = await readTasks();
+  if (clientId) {
+    const existingTask = tasks.find(task => task.clientId === clientId);
+
+    if (existingTask) {
+        return res.status(200).json({
+        message: "Naloga je že bila sinhronizirana.",
+        task: existingTask
+        });
+    }
+  }
 
   const newTask = {
     serverId: randomUUID(),
+    clientId: clientId || randomUUID(),
     title,
     subject,
     dueDate,

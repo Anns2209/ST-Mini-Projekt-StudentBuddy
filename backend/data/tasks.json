@@ -16,5 +16,25 @@
     "priority": "low",
     "createdAt": "2026-05-12T12:55:03.878Z",
     "syncedAt": "2026-05-12T12:55:03.910Z"
+  },
+  {
+    "serverId": "496e56f5-379f-496d-8554-4c909229e18a",
+    "clientId": "49ebff0e-035e-4361-9ed9-6001be29d44a",
+    "title": "pripravi pwa app",
+    "subject": "spletne tehnologije",
+    "dueDate": "2026-05-29",
+    "priority": "medium",
+    "createdAt": "2026-05-12T13:05:37.686Z",
+    "syncedAt": "2026-05-12T13:05:37.731Z"
+  },
+  {
+    "serverId": "bfa73b6b-f205-43db-80ee-f0207502127e",
+    "clientId": "d8808156-dce6-47fd-8320-76f9e7808f4f",
+    "title": "projekt tzva",
+    "subject": "tzva",
+    "dueDate": "2026-05-29",
+    "priority": "high",
+    "createdAt": "2026-05-12T13:06:13.966Z",
+    "syncedAt": "2026-05-12T13:07:17.831Z"
   }
 ]

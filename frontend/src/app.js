@@ -3,6 +3,14 @@ const connectionStatus = document.getElementById("connection-status");
 const taskForm = document.getElementById("task-form");
 const taskList = document.getElementById("task-list");
 
+function createClientId() {
+  if (crypto && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+
+  return `task-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+}
+
 function updateConnectionStatus() {
   if (navigator.onLine) {
     connectionStatus.textContent = "Povezava je aktivna. Podatki se lahko sinhronizirajo.";
@@ -232,6 +240,7 @@ async function sendTaskToServer(task) {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
+      clientId: task.clientId,
       title: task.title,
       subject: task.subject,
       dueDate: task.dueDate,
@@ -271,6 +280,25 @@ async function syncUnsyncedTasks() {
     await renderTasks();
   } catch (error) {
     console.error("Napaka pri sinhronizaciji:", error);
+  }
+}
+
+async function registerBackgroundSync() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
+
+  if (!("SyncManager" in window)) {
+    console.log("Background Sync ni podprt. Uporabljam navadno sinhronizacijo.");
+    return;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    await registration.sync.register("sync-tasks");
+    console.log("Background Sync za naloge je registriran.");
+  } catch (error) {
+    console.error("Background Sync registracija ni uspela:", error);
   }
 }
 
@@ -323,6 +351,7 @@ taskForm.addEventListener("submit", async function (event) {
   }
 
   const newTask = {
+    clientId: createClientId(),
     title: validation.title,
     subject: validation.subject,
     dueDate: validation.dueDate,
@@ -338,6 +367,8 @@ taskForm.addEventListener("submit", async function (event) {
     clearFormErrors();
 
     await renderTasks();
+
+    await registerBackgroundSync();
     
     if (navigator.onLine) {
       await syncUnsyncedTasks();
