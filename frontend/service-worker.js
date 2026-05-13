@@ -1,4 +1,4 @@
-const CACHE_NAME = "studysync-cache-v8";
+const CACHE_NAME = "studysync-cache-v9";
 const DB_NAME = "studysync-db";
 const DB_VERSION = 1;
 const TASK_STORE = "tasks";
@@ -180,6 +180,27 @@ async function sendTaskToServer(task) {
   return response.json();
 }
 
+async function updateTaskOnServer(task) {
+  const response = await fetch(`${API_BASE_URL}/tasks/${task.serverId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      title: task.title,
+      subject: task.subject,
+      dueDate: task.dueDate,
+      priority: task.priority
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Background Sync: posodobitev naloge ni uspela.");
+  }
+
+  return response.json();
+}
+
 async function deleteTaskFromServer(serverId) {
   const response = await fetch(`${API_BASE_URL}/tasks/${serverId}`, {
     method: "DELETE"
@@ -211,13 +232,26 @@ async function syncUnsyncedTasksInBackground() {
   /*
     2. Nato obdelamo naloge, ki čakajo na pošiljanje na strežnik.
   */
-  const refreshedTasks = await getAllTasksFromDB();
-
   const unsyncedTasks = refreshedTasks.filter(task => {
-    return task.synced === false && task.pendingDelete !== true;
-  });
+  return task.synced === false && task.pendingDelete !== true;
+});
 
-  for (const task of unsyncedTasks) {
+for (const task of unsyncedTasks) {
+  if (task.pendingUpdate === true && task.serverId) {
+    const result = await updateTaskOnServer(task);
+
+    const updatedTask = {
+      ...task,
+      synced: true,
+      pendingUpdate: false,
+      updatedAt: result.task.updatedAt
+    };
+
+    await updateTaskInDB(updatedTask);
+    continue;
+  }
+
+  if (!task.serverId) {
     const result = await sendTaskToServer(task);
 
     const updatedTask = {
@@ -229,6 +263,7 @@ async function syncUnsyncedTasksInBackground() {
 
     await updateTaskInDB(updatedTask);
   }
+}
 
   const clientsList = await self.clients.matchAll();
 

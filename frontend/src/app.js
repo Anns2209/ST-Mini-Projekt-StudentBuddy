@@ -8,6 +8,11 @@ const testNotificationButton = document.getElementById("test-notification-button
 const notificationStatus = document.getElementById("notification-status");
 const dueRemindersButton = document.getElementById("due-reminders-button");
 
+const submitTaskButton = document.getElementById("submit-task-button");
+const cancelEditButton = document.getElementById("cancel-edit-button");
+
+let editingTaskId = null;
+
 function createClientId() {
   if (crypto && crypto.randomUUID) {
     return crypto.randomUUID();
@@ -184,6 +189,34 @@ function getPriorityClass(priority) {
   return "";
 }
 
+function startEditingTask(task) {
+  editingTaskId = task.id;
+
+  document.getElementById("task-title").value = task.title;
+  document.getElementById("task-subject").value = task.subject;
+  document.getElementById("task-due-date").value = task.dueDate;
+  document.getElementById("task-priority").value = task.priority;
+
+  submitTaskButton.textContent = "Shrani spremembe";
+  cancelEditButton.hidden = false;
+
+  document.getElementById("task-form-title").textContent = "Uredi nalogo";
+
+  document.getElementById("task-title").focus();
+}
+
+function cancelEditingTask() {
+  editingTaskId = null;
+
+  taskForm.reset();
+  clearFormErrors();
+
+  submitTaskButton.textContent = "Dodaj nalogo";
+  cancelEditButton.hidden = true;
+
+  document.getElementById("task-form-title").textContent = "Dodaj testno nalogo";
+}
+
 function createTaskElement(task) {
   const li = document.createElement("li");
   li.className = "task-item";
@@ -217,18 +250,34 @@ function createTaskElement(task) {
   content.appendChild(priority);
   content.appendChild(syncStatus);
 
-  const deleteButton = document.createElement("button");
-  deleteButton.type = "button";
-  deleteButton.className = "delete-button";
-  deleteButton.textContent = "Izbriši";
-  deleteButton.setAttribute("aria-label", `Izbriši nalogo ${task.title}`);
+  const actions = document.createElement("div");
+actions.className = "task-actions";
 
-  deleteButton.addEventListener("click", async () => {
-    await handleDeleteTask(task);
-  });
+const editButton = document.createElement("button");
+editButton.type = "button";
+editButton.className = "edit-button";
+editButton.textContent = "Uredi";
+editButton.setAttribute("aria-label", `Uredi nalogo ${task.title}`);
 
-  li.appendChild(content);
-  li.appendChild(deleteButton);
+editButton.addEventListener("click", () => {
+  startEditingTask(task);
+});
+
+const deleteButton = document.createElement("button");
+deleteButton.type = "button";
+deleteButton.className = "delete-button";
+deleteButton.textContent = "Izbriši";
+deleteButton.setAttribute("aria-label", `Izbriši nalogo ${task.title}`);
+
+deleteButton.addEventListener("click", async () => {
+  await handleDeleteTask(task);
+});
+
+actions.appendChild(editButton);
+actions.appendChild(deleteButton);
+
+li.appendChild(content);
+li.appendChild(actions);
 
   return li;
 }
@@ -251,6 +300,27 @@ async function sendTaskToServer(task) {
 
   if (!response.ok) {
     throw new Error("Naloge ni bilo mogoče poslati na strežnik.");
+  }
+
+  return response.json();
+}
+
+async function updateTaskOnServer(task) {
+  const response = await fetch(`${API_BASE_URL}/tasks/${task.serverId}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      title: task.title,
+      subject: task.subject,
+      dueDate: task.dueDate,
+      priority: task.priority
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error("Naloge ni bilo mogoče posodobiti na strežniku.");
   }
 
   return response.json();
@@ -396,25 +466,37 @@ async function syncPendingDeletes() {
 }
 
 async function syncUnsyncedTasks() {
-  if (!navigator.onLine) {
-    return;
-  }
-
   try {
     const unsyncedTasks = (await window.studySyncDB.getUnsyncedTasks())
       .filter(task => task.pendingDelete !== true);
 
     for (const task of unsyncedTasks) {
-      const result = await sendTaskToServer(task);
+      if (task.pendingUpdate === true && task.serverId) {
+        const result = await updateTaskOnServer(task);
 
-      const updatedTask = {
-        ...task,
-        synced: true,
-        serverId: result.task.serverId,
-        syncedAt: result.task.syncedAt
-      };
+        const updatedTask = {
+          ...task,
+          synced: true,
+          pendingUpdate: false,
+          updatedAt: result.task.updatedAt
+        };
 
-      await window.studySyncDB.updateTask(updatedTask);
+        await window.studySyncDB.updateTask(updatedTask);
+        continue;
+      }
+
+      if (!task.serverId) {
+        const result = await sendTaskToServer(task);
+
+        const updatedTask = {
+          ...task,
+          synced: true,
+          serverId: result.task.serverId,
+          syncedAt: result.task.syncedAt
+        };
+
+        await window.studySyncDB.updateTask(updatedTask);
+      }
     }
 
     await renderTasks();
@@ -566,6 +648,8 @@ testNotificationButton.addEventListener("click", sendTestNotification);
 
 dueRemindersButton.addEventListener("click", sendDueReminders);
 
+cancelEditButton.addEventListener("click", cancelEditingTask);
+
 async function renderTasks() {
   try {
     const allTasks = await window.studySyncDB.getAllTasks();
@@ -621,17 +705,63 @@ taskForm.addEventListener("submit", async function (event) {
     return;
   }
 
-  const newTask = {
-    clientId: createClientId(),
-    title: validation.title,
-    subject: validation.subject,
-    dueDate: validation.dueDate,
-    priority: validation.priority,
-    createdAt: new Date().toISOString(),
-    synced: false
-  };
-
   try {
+    if (editingTaskId !== null) {
+      const allTasks = await window.studySyncDB.getAllTasks();
+      const existingTask = allTasks.find(task => task.id === editingTaskId);
+
+      if (!existingTask) {
+        throw new Error("Naloga za urejanje ni bila najdena.");
+      }
+
+      const updatedTask = {
+        ...existingTask,
+        title: validation.title,
+        subject: validation.subject,
+        dueDate: validation.dueDate,
+        priority: validation.priority,
+        updatedAt: new Date().toISOString(),
+        synced: false,
+        pendingUpdate: true
+      };
+
+      await window.studySyncDB.updateTask(updatedTask);
+
+      if (updatedTask.serverId) {
+        try {
+          const result = await updateTaskOnServer(updatedTask);
+
+          const syncedTask = {
+            ...updatedTask,
+            synced: true,
+            pendingUpdate: false,
+            updatedAt: result.task.updatedAt
+          };
+
+          await window.studySyncDB.updateTask(syncedTask);
+        } catch (error) {
+          console.error("Posodobitev na strežniku ni uspela, čaka na sinhronizacijo:", error);
+          await registerBackgroundSync();
+        }
+      }
+
+      cancelEditingTask();
+      await renderTasks();
+      await runSync();
+
+      return;
+    }
+
+    const newTask = {
+      clientId: createClientId(),
+      title: validation.title,
+      subject: validation.subject,
+      dueDate: validation.dueDate,
+      priority: validation.priority,
+      createdAt: new Date().toISOString(),
+      synced: false
+    };
+
     await window.studySyncDB.addTask(newTask);
 
     taskForm.reset();
@@ -640,7 +770,7 @@ taskForm.addEventListener("submit", async function (event) {
     await renderTasks();
 
     await registerBackgroundSync();
-    
+
     if (navigator.onLine) {
       await syncUnsyncedTasks();
     }

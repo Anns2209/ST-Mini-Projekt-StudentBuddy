@@ -359,3 +359,37 @@ select[aria-invalid="true"] {
   margin-top: 1rem;
   font-weight: bold;
 }
+
+.task-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.edit-button {
+  background: #1e3a8a;
+  color: white;
+  flex-shrink: 0;
+}
+
+.edit-button:hover {
+  background: #1d4ed8;
+}
+
+#cancel-edit-button {
+  background: #475569;
+}
+
+#cancel-edit-button:hover {
+  background: #334155;
+}
+
+@media (max-width: 640px) {
+  .task-actions {
+    width: 100%;
+  }
+
+  .task-actions button {
+    width: 100%;
+  }
+}

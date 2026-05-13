@@ -138,6 +138,43 @@ app.post("/api/tasks", async (req, res) => {
   });
 });
 
+app.put("/api/tasks/:serverId", async (req, res) => {
+  const { serverId } = req.params;
+  const { title, subject, dueDate, priority } = req.body;
+
+  if (!title || !subject || !dueDate || !priority) {
+    return res.status(400).json({
+      error: "Manjkajo obvezni podatki za posodobitev naloge."
+    });
+  }
+
+  const tasks = await readTasks();
+
+  const taskIndex = tasks.findIndex(task => task.serverId === serverId);
+
+  if (taskIndex === -1) {
+    return res.status(404).json({
+      error: "Naloga ni bila najdena."
+    });
+  }
+
+  tasks[taskIndex] = {
+    ...tasks[taskIndex],
+    title,
+    subject,
+    dueDate,
+    priority,
+    updatedAt: new Date().toISOString()
+  };
+
+  await writeTasks(tasks);
+
+  res.json({
+    message: "Naloga je bila uspešno posodobljena.",
+    task: tasks[taskIndex]
+  });
+});
+
 app.delete("/api/tasks/:serverId", async (req, res) => {
   const { serverId } = req.params;
 

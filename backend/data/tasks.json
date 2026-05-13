@@ -43,9 +43,10 @@
     "title": "pripravi pwa app",
     "subject": "spletne tehnologije",
     "dueDate": "2026-06-09",
-    "priority": "medium",
+    "priority": "low",
     "createdAt": "2026-05-13T11:46:54.451Z",
-    "syncedAt": "2026-05-13T11:46:54.475Z"
+    "syncedAt": "2026-05-13T11:46:54.475Z",
+    "updatedAt": "2026-05-13T13:20:32.897Z"
   },
   {
     "serverId": "405d431c-2716-459b-ae55-e4828803ef28",
@@ -56,5 +57,16 @@
     "priority": "low",
     "createdAt": "2026-05-13T12:38:08.845Z",
     "syncedAt": "2026-05-13T12:38:08.868Z"
+  },
+  {
+    "serverId": "d7680718-fe72-47ed-892c-924866fc0b8e",
+    "clientId": "d78efe16-238b-4801-809f-37294fd0b6a5",
+    "title": "kolokvij",
+    "subject": "gvrtegrw",
+    "dueDate": "2026-05-20",
+    "priority": "medium",
+    "createdAt": "2026-05-13T13:20:19.874Z",
+    "syncedAt": "2026-05-13T13:20:19.892Z",
+    "updatedAt": "2026-05-13T13:22:43.367Z"
   }
 ]
