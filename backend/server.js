@@ -49,6 +49,31 @@ async function writeSubscriptions(subscriptions) {
   await fs.writeFile(SUBSCRIPTIONS_FILE, JSON.stringify(subscriptions, null, 2));
 }
 
+async function sendPushNotificationToAll(payload) {
+  const subscriptions = await readSubscriptions();
+
+  const results = [];
+
+  for (const subscription of subscriptions) {
+    try {
+      await webpush.sendNotification(subscription, JSON.stringify(payload));
+
+      results.push({
+        endpoint: subscription.endpoint,
+        success: true
+      });
+    } catch (error) {
+      results.push({
+        endpoint: subscription.endpoint,
+        success: false,
+        error: error.message
+      });
+    }
+  }
+
+  return results;
+}
+
 app.get("/api/health", (req, res) => {
   res.json({
     status: "ok",
@@ -100,6 +125,12 @@ app.post("/api/tasks", async (req, res) => {
   tasks.push(newTask);
 
   await writeTasks(tasks);
+
+  await sendPushNotificationToAll({
+    title: "Naloga sinhronizirana",
+    body: `Naloga "${newTask.title}" je bila uspešno shranjena na strežnik.`,
+    url: "/"
+  });
 
   res.status(201).json({
     message: "Naloga je bila uspešno shranjena na strežnik.",
@@ -183,6 +214,49 @@ app.post("/api/push/test", async (req, res) => {
     message: "Testno obvestilo je bilo poslano.",
     sentTo: subscriptions.length,
     results
+  });
+});
+
+app.post("/api/push/due-reminders", async (req, res) => {
+  const tasks = await readTasks();
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const tomorrow = new Date(today);
+  tomorrow.setDate(today.getDate() + 1);
+
+  const importantTasks = tasks.filter(task => {
+    if (!task.dueDate) {
+      return false;
+    }
+
+    const dueDate = new Date(task.dueDate);
+    dueDate.setHours(0, 0, 0, 0);
+
+    return dueDate.getTime() === today.getTime() ||
+           dueDate.getTime() === tomorrow.getTime();
+  });
+
+  if (importantTasks.length === 0) {
+    return res.json({
+      message: "Ni nalog z rokom danes ali jutri.",
+      count: 0
+    });
+  }
+
+  for (const task of importantTasks) {
+    await sendPushNotificationToAll({
+      title: "Opomnik za nalogo",
+      body: `Naloga "${task.title}" ima rok danes ali jutri.`,
+      url: "/"
+    });
+  }
+
+  res.json({
+    message: "Opomniki za bližnje roke so bili poslani.",
+    count: importantTasks.length,
+    tasks: importantTasks
   });
 });
 

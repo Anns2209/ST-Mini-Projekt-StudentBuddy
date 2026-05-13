@@ -66,5 +66,15 @@
     "priority": "high",
     "createdAt": "2026-05-13T11:49:59.965Z",
     "syncedAt": "2026-05-13T11:50:11.613Z"
+  },
+  {
+    "serverId": "edf1f3c8-5819-4b00-94df-570e1fb9505b",
+    "clientId": "17284242-939b-4299-8f05-2b97e1d180ff",
+    "title": "predavanja",
+    "subject": "ita",
+    "dueDate": "2026-05-14",
+    "priority": "high",
+    "createdAt": "2026-05-13T12:04:08.063Z",
+    "syncedAt": "2026-05-13T12:04:08.089Z"
   }
 ]

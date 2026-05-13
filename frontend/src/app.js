@@ -6,6 +6,7 @@ const taskList = document.getElementById("task-list");
 const enableNotificationsButton = document.getElementById("enable-notifications-button");
 const testNotificationButton = document.getElementById("test-notification-button");
 const notificationStatus = document.getElementById("notification-status");
+const dueRemindersButton = document.getElementById("due-reminders-button");
 
 function createClientId() {
   if (crypto && crypto.randomUUID) {
@@ -401,8 +402,34 @@ async function sendTestNotification() {
   }
 }
 
+async function sendDueReminders() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/push/due-reminders`, {
+      method: "POST"
+    });
+
+    if (!response.ok) {
+      throw new Error("Opomnikov ni bilo mogoče poslati.");
+    }
+
+    const data = await response.json();
+
+    if (data.count === 0) {
+      notificationStatus.textContent = "Trenutno ni nalog z rokom danes ali jutri.";
+      return;
+    }
+
+    notificationStatus.textContent = `Poslanih opomnikov: ${data.count}.`;
+  } catch (error) {
+    console.error("Napaka pri pošiljanju opomnikov:", error);
+    notificationStatus.textContent = "Opomnikov trenutno ni mogoče poslati.";
+  }
+}
+
 enableNotificationsButton.addEventListener("click", enablePushNotifications);
 testNotificationButton.addEventListener("click", sendTestNotification);
+
+dueRemindersButton.addEventListener("click", sendDueReminders);
 
 async function renderTasks() {
   try {
