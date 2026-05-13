@@ -1,4 +1,4 @@
-const CACHE_NAME = "studysync-cache-v5";
+const CACHE_NAME = "studysync-cache-v6";
 const DB_NAME = "studysync-db";
 const DB_VERSION = 1;
 const TASK_STORE = "tasks";
@@ -182,3 +182,51 @@ async function syncUnsyncedTasksInBackground() {
     });
   });
 }
+
+self.addEventListener("push", event => {
+  let data = {
+    title: "StudySync",
+    body: "Prejela si novo obvestilo.",
+    url: "/"
+  };
+
+  if (event.data) {
+    data = event.data.json();
+  }
+
+  const options = {
+    body: data.body,
+    icon: "/icons/icon.svg",
+    badge: "/icons/icon.svg",
+    data: {
+      url: data.url || "/"
+    }
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(data.title, options)
+  );
+});
+
+self.addEventListener("notificationclick", event => {
+  event.notification.close();
+
+  const targetUrl = event.notification.data.url || "/";
+
+  event.waitUntil(
+    self.clients.matchAll({
+      type: "window",
+      includeUncontrolled: true
+    }).then(clientList => {
+      for (const client of clientList) {
+        if (client.url.includes(targetUrl) && "focus" in client) {
+          return client.focus();
+        }
+      }
+
+      if (self.clients.openWindow) {
+        return self.clients.openWindow(targetUrl);
+      }
+    })
+  );
+});

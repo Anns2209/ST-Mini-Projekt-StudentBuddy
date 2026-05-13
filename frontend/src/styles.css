@@ -339,3 +339,23 @@ select[aria-invalid="true"] {
   border-color: #991b1b;
   background: #fff7f7;
 }
+
+.notification-section {
+  background: white;
+  border-radius: 1rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+
+.button-row {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-top: 1rem;
+}
+
+#notification-status {
+  margin-top: 1rem;
+  font-weight: bold;
+}

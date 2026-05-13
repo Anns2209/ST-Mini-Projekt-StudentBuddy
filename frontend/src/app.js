@@ -3,6 +3,10 @@ const connectionStatus = document.getElementById("connection-status");
 const taskForm = document.getElementById("task-form");
 const taskList = document.getElementById("task-list");
 
+const enableNotificationsButton = document.getElementById("enable-notifications-button");
+const testNotificationButton = document.getElementById("test-notification-button");
+const notificationStatus = document.getElementById("notification-status");
+
 function createClientId() {
   if (crypto && crypto.randomUUID) {
     return crypto.randomUUID();
@@ -301,6 +305,104 @@ async function registerBackgroundSync() {
     console.error("Background Sync registracija ni uspela:", error);
   }
 }
+
+function urlBase64ToUint8Array(base64String) {
+  const padding = "=".repeat((4 - base64String.length % 4) % 4);
+  const base64 = (base64String + padding)
+    .replace(/-/g, "+")
+    .replace(/_/g, "/");
+
+  const rawData = window.atob(base64);
+  const outputArray = new Uint8Array(rawData.length);
+
+  for (let index = 0; index < rawData.length; index += 1) {
+    outputArray[index] = rawData.charCodeAt(index);
+  }
+
+  return outputArray;
+}
+
+async function getVapidPublicKey() {
+  const response = await fetch(`${API_BASE_URL}/push/public-key`);
+
+  if (!response.ok) {
+    throw new Error("Javnega ključa za obvestila ni bilo mogoče pridobiti.");
+  }
+
+  const data = await response.json();
+  return data.publicKey;
+}
+
+async function enablePushNotifications() {
+  if (!("Notification" in window)) {
+    notificationStatus.textContent = "Ta brskalnik ne podpira obvestil.";
+    return;
+  }
+
+  if (!("serviceWorker" in navigator)) {
+    notificationStatus.textContent = "Service Worker ni podprt.";
+    return;
+  }
+
+  if (!("PushManager" in window)) {
+    notificationStatus.textContent = "Push obvestila niso podprta v tem brskalniku.";
+    return;
+  }
+
+  const permission = await Notification.requestPermission();
+
+  if (permission !== "granted") {
+    notificationStatus.textContent = "Obvestila niso bila dovoljena.";
+    return;
+  }
+
+  try {
+    const registration = await navigator.serviceWorker.ready;
+    const publicKey = await getVapidPublicKey();
+
+    const subscription = await registration.pushManager.subscribe({
+      userVisibleOnly: true,
+      applicationServerKey: urlBase64ToUint8Array(publicKey)
+    });
+
+    const response = await fetch(`${API_BASE_URL}/push/subscribe`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(subscription)
+    });
+
+    if (!response.ok) {
+      throw new Error("Naročnine ni bilo mogoče shraniti na strežnik.");
+    }
+
+    notificationStatus.textContent = "Obvestila so omogočena.";
+  } catch (error) {
+    console.error("Napaka pri omogočanju obvestil:", error);
+    notificationStatus.textContent = "Obvestil trenutno ni mogoče omogočiti.";
+  }
+}
+
+async function sendTestNotification() {
+  try {
+    const response = await fetch(`${API_BASE_URL}/push/test`, {
+      method: "POST"
+    });
+
+    if (!response.ok) {
+      throw new Error("Testnega obvestila ni bilo mogoče poslati.");
+    }
+
+    notificationStatus.textContent = "Testno obvestilo je bilo poslano.";
+  } catch (error) {
+    console.error("Napaka pri testnem obvestilu:", error);
+    notificationStatus.textContent = "Testnega obvestila ni bilo mogoče poslati.";
+  }
+}
+
+enableNotificationsButton.addEventListener("click", enablePushNotifications);
+testNotificationButton.addEventListener("click", sendTestNotification);
 
 async function renderTasks() {
   try {
