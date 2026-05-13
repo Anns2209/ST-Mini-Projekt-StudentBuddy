@@ -132,10 +132,17 @@ async function getUnsyncedTasksFromDB() {
   return tasks.filter(task => task.synced === false);
 }
 
+async function getPendingDeleteTasksFromDB() {
+  const tasks = await getAllTasksFromDB();
+
+  return tasks.filter(task => task.pendingDelete === true);
+}
+
 window.studySyncDB = {
   addTask: addTaskToDB,
   getAllTasks: getAllTasksFromDB,
   deleteTask: deleteTaskFromDB,
   updateTask: updateTaskInDB,
-  getUnsyncedTasks: getUnsyncedTasksFromDB
+  getUnsyncedTasks: getUnsyncedTasksFromDB,
+  getPendingDeleteTasks: getPendingDeleteTasksFromDB
 };

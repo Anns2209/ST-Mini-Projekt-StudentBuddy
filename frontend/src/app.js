@@ -224,12 +224,7 @@ function createTaskElement(task) {
   deleteButton.setAttribute("aria-label", `Izbriši nalogo ${task.title}`);
 
   deleteButton.addEventListener("click", async () => {
-    try {
-      await window.studySyncDB.deleteTask(task.id);
-      await renderTasks();
-    } catch (error) {
-      console.error("Napaka pri brisanju naloge:", error);
-    }
+    await handleDeleteTask(task);
   });
 
   li.appendChild(content);
@@ -261,13 +256,153 @@ async function sendTaskToServer(task) {
   return response.json();
 }
 
+async function deleteTaskFromServer(serverId) {
+  const response = await fetch(`${API_BASE_URL}/tasks/${serverId}`, {
+    method: "DELETE"
+  });
+
+  if (!response.ok) {
+    throw new Error("Naloge ni bilo mogoče izbrisati s strežnika.");
+  }
+
+  return response.json();
+}
+
+async function syncPendingDeletes() {
+  if (!navigator.onLine) {
+    return;
+  }
+
+  try {
+    const pendingDeletes = await window.studySyncDB.getPendingDeleteTasks();
+
+    for (const task of pendingDeletes) {
+      if (task.serverId) {
+        await deleteTaskFromServer(task.serverId);
+      }
+
+      await window.studySyncDB.deleteTask(task.id);
+    }
+
+    await renderTasks();
+  } catch (error) {
+    console.error("Napaka pri sinhronizaciji brisanja:", error);
+  }
+}
+
+async function handleDeleteTask(task) {
+  try {
+    /*
+      Če naloga nima serverId, pomeni, da še nikoli ni bila uspešno
+      shranjena na strežnik. Zato jo lahko izbrišemo samo lokalno.
+    */
+    if (!task.serverId) {
+      await window.studySyncDB.deleteTask(task.id);
+      await renderTasks();
+      return;
+    }
+
+    /*
+      Če ima naloga serverId in smo povezani, jo poskusimo izbrisati
+      s strežnika. Šele nato jo izbrišemo lokalno.
+    */
+    if (navigator.onLine) {
+      await deleteTaskFromServer(task.serverId);
+      await window.studySyncDB.deleteTask(task.id);
+      await renderTasks();
+
+      if (notificationStatus) {
+        notificationStatus.textContent = "Naloga je bila izbrisana s strežnika.";
+      }
+
+      return;
+    }
+
+    /*
+      Če ima naloga serverId, ampak nismo povezani, je ne izbrišemo
+      iz IndexedDB. Označimo jo kot čakajočo za brisanje.
+    */
+    const updatedTask = {
+      ...task,
+      pendingDelete: true,
+      deletedAt: new Date().toISOString()
+    };
+
+    await window.studySyncDB.updateTask(updatedTask);
+    await registerBackgroundSync();
+    await renderTasks();
+
+    if (notificationStatus) {
+      notificationStatus.textContent = "Naloga bo izbrisana s strežnika, ko bo povezava ponovno na voljo.";
+    }
+  } catch (error) {
+    console.error("Napaka pri brisanju naloge:", error);
+
+    /*
+      Če je brisanje s strežnika spodletelo, naloge ne izbrišemo lokalno,
+      ampak jo označimo za kasnejše brisanje.
+    */
+    const updatedTask = {
+      ...task,
+      pendingDelete: true,
+      deletedAt: new Date().toISOString()
+    };
+
+    await window.studySyncDB.updateTask(updatedTask);
+    await registerBackgroundSync();
+    await renderTasks();
+
+    if (notificationStatus) {
+      notificationStatus.textContent = "Brisanje trenutno ni uspelo. Naloga čaka na sinhronizacijo brisanja.";
+    }
+  }
+}
+
+async function syncPendingDeletes() {
+  try {
+    console.log("Preverjam čakajoča brisanja ...");
+
+    const pendingDeletes = await window.studySyncDB.getPendingDeleteTasks();
+
+    console.log("Čakajoča brisanja:", pendingDeletes);
+
+    if (pendingDeletes.length === 0) {
+      return;
+    }
+
+    for (const task of pendingDeletes) {
+      console.log("Brišem nalogo s strežnika:", task.serverId);
+
+      if (task.serverId) {
+        await deleteTaskFromServer(task.serverId);
+      }
+
+      console.log("Brišem nalogo lokalno:", task.id);
+      await window.studySyncDB.deleteTask(task.id);
+    }
+
+    await renderTasks();
+
+    if (notificationStatus) {
+      notificationStatus.textContent = "Čakajoča brisanja so bila uspešno sinhronizirana.";
+    }
+  } catch (error) {
+    console.error("Napaka pri sinhronizaciji brisanja:", error);
+
+    if (notificationStatus) {
+      notificationStatus.textContent = "Brisanje še čaka na sinhronizacijo.";
+    }
+  }
+}
+
 async function syncUnsyncedTasks() {
   if (!navigator.onLine) {
     return;
   }
 
   try {
-    const unsyncedTasks = await window.studySyncDB.getUnsyncedTasks();
+    const unsyncedTasks = (await window.studySyncDB.getUnsyncedTasks())
+      .filter(task => task.pendingDelete !== true);
 
     for (const task of unsyncedTasks) {
       const result = await sendTaskToServer(task);
@@ -433,7 +568,8 @@ dueRemindersButton.addEventListener("click", sendDueReminders);
 
 async function renderTasks() {
   try {
-    const tasks = await window.studySyncDB.getAllTasks();
+    const allTasks = await window.studySyncDB.getAllTasks();
+    const tasks = allTasks.filter(task => task.pendingDelete !== true);
 
     taskList.innerHTML = "";
 
@@ -461,8 +597,14 @@ async function renderTasks() {
   }
 }
 
+async function runSync() {
+  await syncPendingDeletes();
+  await syncUnsyncedTasks();
+}
+
 window.addEventListener("online", async () => {
   updateConnectionStatus();
+  await syncPendingDeletes();
   await syncUnsyncedTasks();
 });
 
@@ -519,7 +661,9 @@ if ("serviceWorker" in navigator) {
 }
 
 renderTasks();
+runSync();
 
 if (navigator.onLine) {
+  syncPendingDeletes();
   syncUnsyncedTasks();
 }

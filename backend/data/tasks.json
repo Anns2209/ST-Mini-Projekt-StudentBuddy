@@ -48,33 +48,13 @@
     "syncedAt": "2026-05-13T11:46:54.475Z"
   },
   {
-    "serverId": "5c1d8b1d-aa95-4813-85dc-c2bc43068de3",
-    "clientId": "d8de2934-f206-4d5e-9226-8bcd188f031c",
-    "title": "kolokvij",
-    "subject": "tzva",
-    "dueDate": "2026-06-04",
+    "serverId": "405d431c-2716-459b-ae55-e4828803ef28",
+    "clientId": "41bbd97b-052e-4544-b9c6-4701e8e7ca9d",
+    "title": "vaje",
+    "subject": "cir",
+    "dueDate": "2026-05-19",
     "priority": "low",
-    "createdAt": "2026-05-13T11:47:41.229Z",
-    "syncedAt": "2026-05-13T11:47:41.252Z"
-  },
-  {
-    "serverId": "144fcdcf-0337-4990-bcdf-e1c0bfdfcde6",
-    "clientId": "53b91367-5fe0-4026-8227-31d9615c1148",
-    "title": "projekt tzva",
-    "subject": "tzva",
-    "dueDate": "2026-05-28",
-    "priority": "high",
-    "createdAt": "2026-05-13T11:49:59.965Z",
-    "syncedAt": "2026-05-13T11:50:11.613Z"
-  },
-  {
-    "serverId": "edf1f3c8-5819-4b00-94df-570e1fb9505b",
-    "clientId": "17284242-939b-4299-8f05-2b97e1d180ff",
-    "title": "predavanja",
-    "subject": "ita",
-    "dueDate": "2026-05-14",
-    "priority": "high",
-    "createdAt": "2026-05-13T12:04:08.063Z",
-    "syncedAt": "2026-05-13T12:04:08.089Z"
+    "createdAt": "2026-05-13T12:38:08.845Z",
+    "syncedAt": "2026-05-13T12:38:08.868Z"
   }
 ]

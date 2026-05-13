@@ -1,4 +1,4 @@
-const CACHE_NAME = "studysync-cache-v7";
+const CACHE_NAME = "studysync-cache-v8";
 const DB_NAME = "studysync-db";
 const DB_VERSION = 1;
 const TASK_STORE = "tasks";
@@ -134,6 +134,29 @@ async function updateTaskInDB(task) {
   });
 }
 
+async function deleteTaskFromDB(id) {
+  const db = await openStudySyncDB();
+
+  return new Promise((resolve, reject) => {
+    const transaction = db.transaction(TASK_STORE, "readwrite");
+    const store = transaction.objectStore(TASK_STORE);
+    const request = store.delete(id);
+
+    request.onsuccess = () => {
+      resolve();
+    };
+
+    request.onerror = () => {
+      reject(request.error);
+    };
+
+    transaction.oncomplete = () => {
+      db.close();
+    };
+  });
+}
+
+
 async function sendTaskToServer(task) {
   const response = await fetch(`${API_BASE_URL}/tasks`, {
     method: "POST",
@@ -157,9 +180,42 @@ async function sendTaskToServer(task) {
   return response.json();
 }
 
+async function deleteTaskFromServer(serverId) {
+  const response = await fetch(`${API_BASE_URL}/tasks/${serverId}`, {
+    method: "DELETE"
+  });
+
+  if (!response.ok) {
+    throw new Error("Background Sync: brisanje naloge ni uspelo.");
+  }
+
+  return response.json();
+}
+
 async function syncUnsyncedTasksInBackground() {
   const tasks = await getAllTasksFromDB();
-  const unsyncedTasks = tasks.filter(task => task.synced === false);
+
+  /*
+    1. Najprej obdelamo naloge, ki čakajo na brisanje.
+  */
+  const pendingDeletes = tasks.filter(task => task.pendingDelete === true);
+
+  for (const task of pendingDeletes) {
+    if (task.serverId) {
+      await deleteTaskFromServer(task.serverId);
+    }
+
+    await deleteTaskFromDB(task.id);
+  }
+
+  /*
+    2. Nato obdelamo naloge, ki čakajo na pošiljanje na strežnik.
+  */
+  const refreshedTasks = await getAllTasksFromDB();
+
+  const unsyncedTasks = refreshedTasks.filter(task => {
+    return task.synced === false && task.pendingDelete !== true;
+  });
 
   for (const task of unsyncedTasks) {
     const result = await sendTaskToServer(task);
