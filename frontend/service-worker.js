@@ -1,4 +1,6 @@
-const CACHE_NAME = "studysync-cache-v10";
+const CACHE_NAME = "studysync-cache-v11";
+const API_CACHE_NAME = "studysync-api-cache-v1";
+
 const DB_NAME = "studysync-db";
 const DB_VERSION = 1;
 const TASK_STORE = "tasks";
@@ -42,6 +44,13 @@ self.addEventListener("activate", event => {
 });
 
 self.addEventListener("fetch", event => {
+self.addEventListener("fetch", event => {
+  const requestUrl = new URL(event.request.url);
+
+  /*
+    1. Navigacija:
+    Network First + offline fallback.
+  */
   if (event.request.mode === "navigate") {
     event.respondWith(
       fetch(event.request).catch(() => caches.match("/offline.html"))
@@ -49,12 +58,70 @@ self.addEventListener("fetch", event => {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      return cachedResponse || fetch(event.request);
-    })
-  );
+  /*
+    2. API GET zahteve:
+    Network First + Cache Fallback.
+    Uporabno za branje nalog iz strežnika.
+  */
+  if (
+    event.request.method === "GET" &&
+    requestUrl.origin === "http://localhost:3000" &&
+    requestUrl.pathname.startsWith("/api/tasks")
+  ) {
+    event.respondWith(networkFirstForApi(event.request));
+    return;
+  }
+
+  /*
+    3. Statični viri:
+    Cache First.
+    Uporabno za CSS, JS, ikone, manifest.
+  */
+  if (event.request.method === "GET") {
+    event.respondWith(cacheFirst(event.request));
+  }
 });
+
+async function cacheFirst(request) {
+  const cachedResponse = await caches.match(request);
+
+  if (cachedResponse) {
+    return cachedResponse;
+  }
+
+  return fetch(request);
+}
+
+async function networkFirstForApi(request) {
+  try {
+    const networkResponse = await fetch(request);
+
+    const cache = await caches.open(API_CACHE_NAME);
+    cache.put(request, networkResponse.clone());
+
+    return networkResponse;
+  } catch (error) {
+    const cachedResponse = await caches.match(request);
+
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    return new Response(
+      JSON.stringify({
+        count: 0,
+        tasks: [],
+        offline: true,
+        message: "Podatki s strežnika trenutno niso dosegljivi."
+      }),
+      {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
+    );
+  }
+}
 
 self.addEventListener("sync", event => {
   if (event.tag === "sync-tasks") {
