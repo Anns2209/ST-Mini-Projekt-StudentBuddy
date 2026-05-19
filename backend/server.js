@@ -26,9 +26,21 @@ app.use(express.json());
 async function readTasks() {
   try {
     const data = await fs.readFile(TASKS_FILE, "utf-8");
-    return JSON.parse(data);
+    const parsedTasks = JSON.parse(data);
+
+    if (!Array.isArray(parsedTasks)) {
+      throw new Error("tasks.json ne vsebuje seznama nalog.");
+    }
+
+    return parsedTasks;
   } catch (error) {
-    return [];
+    if (error.code === "ENOENT") {
+      await writeTasks([]);
+      return [];
+    }
+
+    console.error("Napaka pri branju tasks.json:", error);
+    throw error;
   }
 }
 

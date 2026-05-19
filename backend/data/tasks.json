@@ -1,72 +1,43 @@
 [
   {
-    "serverId": "87f261e8-aa81-465f-b077-02e2a24d0c46",
-    "title": "pripravi pwa app",
-    "subject": "spletne tehnologije",
-    "dueDate": "2026-06-11",
-    "priority": "medium",
-    "createdAt": "2026-05-12T12:54:25.750Z",
-    "syncedAt": "2026-05-12T12:54:25.799Z"
+    "serverId": "d2807ab4-c9c8-420b-83ee-0f71890700f3",
+    "clientId": "1e6c23cc-d5bb-497d-93ce-21849ee08583",
+    "title": "ustni izpit",
+    "subject": "cir",
+    "dueDate": "2026-06-02",
+    "priority": "low",
+    "createdAt": "2026-05-19T11:52:12.387Z",
+    "syncedAt": "2026-05-19T11:52:31.023Z"
   },
   {
-    "serverId": "8b23034a-ba8f-4ada-97a6-5b535699a5ba",
-    "title": "projekt tzva",
+    "serverId": "521eeae9-ee3d-4636-b654-3c6412b7da03",
+    "clientId": "f28b0784-2d82-43fb-a29c-77dd9eae1347",
+    "title": "projekt vaje",
+    "subject": "tzva",
+    "dueDate": "2026-06-03",
+    "priority": "high",
+    "createdAt": "2026-05-19T11:51:02.643Z",
+    "syncedAt": "2026-05-19T12:00:49.533Z",
+    "updatedAt": "2026-05-19T12:10:18.929Z"
+  },
+  {
+    "serverId": "e17fd695-cfdb-4b31-bfb7-dda22dab1acc",
+    "clientId": "fc62584b-1731-4e02-b6de-495c6b728615",
+    "title": "kolokvij",
+    "subject": "ita",
+    "dueDate": "2026-06-11",
+    "priority": "medium",
+    "createdAt": "2026-05-19T12:06:39.126Z",
+    "syncedAt": "2026-05-19T12:06:39.158Z"
+  },
+  {
+    "serverId": "6e006864-69ed-4bf8-b20c-e73338d5d0ae",
+    "clientId": "5366150d-22f7-4fa3-b8e8-efdbf2f84142",
+    "title": "kolokvij",
     "subject": "tzva",
     "dueDate": "2026-06-04",
     "priority": "low",
-    "createdAt": "2026-05-12T12:55:03.878Z",
-    "syncedAt": "2026-05-12T12:55:03.910Z"
-  },
-  {
-    "serverId": "496e56f5-379f-496d-8554-4c909229e18a",
-    "clientId": "49ebff0e-035e-4361-9ed9-6001be29d44a",
-    "title": "pripravi pwa app",
-    "subject": "spletne tehnologije",
-    "dueDate": "2026-05-29",
-    "priority": "medium",
-    "createdAt": "2026-05-12T13:05:37.686Z",
-    "syncedAt": "2026-05-12T13:05:37.731Z"
-  },
-  {
-    "serverId": "bfa73b6b-f205-43db-80ee-f0207502127e",
-    "clientId": "d8808156-dce6-47fd-8320-76f9e7808f4f",
-    "title": "projekt tzva",
-    "subject": "tzva",
-    "dueDate": "2026-05-29",
-    "priority": "high",
-    "createdAt": "2026-05-12T13:06:13.966Z",
-    "syncedAt": "2026-05-12T13:07:17.831Z"
-  },
-  {
-    "serverId": "779cd310-4e04-4861-9f62-ee8f4c31fe17",
-    "clientId": "347107f3-e62f-43a6-93ac-b7ebb1f6cfa2",
-    "title": "pripravi pwa app",
-    "subject": "spletne tehnologije",
-    "dueDate": "2026-06-09",
-    "priority": "low",
-    "createdAt": "2026-05-13T11:46:54.451Z",
-    "syncedAt": "2026-05-13T11:46:54.475Z",
-    "updatedAt": "2026-05-13T13:20:32.897Z"
-  },
-  {
-    "serverId": "405d431c-2716-459b-ae55-e4828803ef28",
-    "clientId": "41bbd97b-052e-4544-b9c6-4701e8e7ca9d",
-    "title": "vaje",
-    "subject": "cir",
-    "dueDate": "2026-05-19",
-    "priority": "low",
-    "createdAt": "2026-05-13T12:38:08.845Z",
-    "syncedAt": "2026-05-13T12:38:08.868Z"
-  },
-  {
-    "serverId": "d7680718-fe72-47ed-892c-924866fc0b8e",
-    "clientId": "d78efe16-238b-4801-809f-37294fd0b6a5",
-    "title": "kolokvij",
-    "subject": "gvrtegrw",
-    "dueDate": "2026-05-20",
-    "priority": "medium",
-    "createdAt": "2026-05-13T13:20:19.874Z",
-    "syncedAt": "2026-05-13T13:20:19.892Z",
-    "updatedAt": "2026-05-13T13:22:43.367Z"
+    "createdAt": "2026-05-19T12:07:16.895Z",
+    "syncedAt": "2026-05-19T12:07:42.934Z"
   }
 ]

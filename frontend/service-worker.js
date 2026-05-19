@@ -1,4 +1,4 @@
-const CACHE_NAME = "studysync-cache-v9";
+const CACHE_NAME = "studysync-cache-v10";
 const DB_NAME = "studysync-db";
 const DB_VERSION = 1;
 const TASK_STORE = "tasks";

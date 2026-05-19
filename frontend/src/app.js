@@ -338,6 +338,69 @@ async function deleteTaskFromServer(serverId) {
   return response.json();
 }
 
+async function getTasksFromServer() {
+  const response = await fetch(`${API_BASE_URL}/tasks`);
+
+  if (!response.ok) {
+    throw new Error("Naloge s strežnika niso dosegljive.");
+  }
+
+  const data = await response.json();
+  return data.tasks || [];
+}
+
+async function repairMissingServerTasks() {
+  try {
+    console.log("Preverjam, ali lokalne naloge manjkajo na strežniku ...");
+
+    const localTasks = await window.studySyncDB.getAllTasks();
+    const serverTasks = await getTasksFromServer();
+
+    const serverClientIds = new Set(
+      serverTasks
+        .map(task => task.clientId)
+        .filter(Boolean)
+    );
+
+    const visibleLocalTasks = localTasks.filter(task => {
+      return task.pendingDelete !== true;
+    });
+
+    for (const task of visibleLocalTasks) {
+      let taskToSync = task;
+
+      if (!taskToSync.clientId) {
+        taskToSync = {
+          ...taskToSync,
+          clientId: createClientId()
+        };
+      }
+
+      const existsOnServer = serverClientIds.has(taskToSync.clientId);
+
+      if (!existsOnServer) {
+        console.log("Naloga manjka na strežniku, ponovno jo pošiljam:", taskToSync.title);
+
+        const result = await sendTaskToServer(taskToSync);
+
+        const repairedTask = {
+          ...taskToSync,
+          synced: true,
+          pendingUpdate: false,
+          serverId: result.task.serverId,
+          syncedAt: result.task.syncedAt
+        };
+
+        await window.studySyncDB.updateTask(repairedTask);
+      }
+    }
+
+    await renderTasks();
+  } catch (error) {
+    console.error("Popravilo manjkajočih nalog na strežniku ni uspelo:", error);
+  }
+}
+
 async function syncPendingDeletes() {
   if (!navigator.onLine) {
     return;
@@ -683,6 +746,7 @@ async function renderTasks() {
 
 async function runSync() {
   await syncPendingDeletes();
+  await repairMissingServerTasks();
   await syncUnsyncedTasks();
 }
 
