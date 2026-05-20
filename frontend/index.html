@@ -17,14 +17,14 @@
 
   <header class="app-header">
     <h1>StudySync</h1>
-    <p>Dostopen študentski planer, ki deluje tudi brez povezave.</p>
+    <p>Študentski Planer</p>
   </header>
 
   <nav class="main-nav" aria-label="Glavna navigacija">
     <ul>
         <li><a href="#today-title">Pregled</a></li>
         <li><a href="#task-form-title">Naloge</a></li>
-        <li><a href="#accessibility-info">Dostopnost</a></li>
+       
     </ul>
   </nav>
 
@@ -40,8 +40,7 @@
       <h2 id="notifications-title">Obvestila</h2>
 
       <p>
-        Omogoči obvestila, da te lahko StudySync opozori na pomembne dogodke,
-        na primer uspešno sinhronizacijo ali prihajajoče roke.
+        Omogoči obvestila, da te lahko StudySync opozori na uspešno sinhronizacijo ali prihajajoče roke.
       </p>
 
       <div class="button-row">
@@ -49,9 +48,6 @@
           Omogoči obvestila
         </button>
 
-        <button type="button" id="test-notification-button">
-          Pošlji testno obvestilo
-        </button>
 
         <button type="button" id="due-reminders-button">
           Preveri bližnje roke
@@ -65,28 +61,49 @@
     </section>
 
     <section class="dashboard" aria-labelledby="today-title">
-      <h2 id="today-title">Današnji pregled</h2>
+      <div class="section-heading">
+        <h2 id="today-title">Današnji pregled</h2>
+        <p>
+          Hiter povzetek najpomembnejših obveznosti, rokov in sinhronizacije.
+        </p>
+      </div>
 
-      <div class="cards">
-        <article class="card">
-          <h3>Naslednja naloga</h3>
-          <p>Dodaj svojo prvo nalogo za predmet.</p>
+      <div class="cards dashboard-grid" aria-live="polite">
+        <article class="card dashboard-card">
+          <h3>Naslednji rok</h3>
+          <p id="next-task-title" class="dashboard-value">Ni prihajajočih rokov</p>
+          <p id="next-task-meta" class="dashboard-caption">
+            Dodaj nalogo z rokom, da se prikaže tukaj.
+          </p>
         </article>
 
-        <article class="card">
-          <h3>Zapiski</h3>
-          <p>Ustvari zapiske, ki bodo dostopni tudi brez interneta.</p>
+        <article class="card dashboard-card">
+          <h3>Naloge za danes</h3>
+          <p id="today-task-count" class="dashboard-number">0</p>
+          <p id="today-task-text" class="dashboard-caption">
+            Danes nimaš označenih rokov.
+          </p>
         </article>
 
-        <article class="card">
-          <h3>Opomniki</h3>
-          <p>Kasneje bomo dodali push obvestila za pomembne roke.</p>
+        <article class="card dashboard-card">
+          <h3>Visoka prioriteta</h3>
+          <p id="high-priority-count" class="dashboard-number">0</p>
+          <p id="high-priority-text" class="dashboard-caption">
+            Trenutno ni nujnih nalog.
+          </p>
+        </article>
+
+        <article class="card dashboard-card">
+          <h3>Sinhronizacija</h3>
+          <p id="sync-count" class="dashboard-number">0</p>
+          <p id="sync-text" class="dashboard-caption">
+            Vse obveznosti so sinhronizirane.
+          </p>
         </article>
       </div>
     </section>
-
-    <section class="form-section" aria-labelledby="task-form-title">
-      <h2 id="task-form-title">Dodaj testno nalogo</h2>
+        <section class="form-section" aria-labelledby="task-form-title">
+      <h2 id="task-form-title">Dodaj nalogo</h2>
 
       
 <form id="task-form" novalidate>
@@ -124,7 +141,7 @@
       type="text" 
       id="task-subject" 
       name="task-subject" 
-      placeholder="Npr. Mobilna interakcija"
+      placeholder="Npr. Spletne tehnologije"
       required
       aria-describedby="task-subject-hint task-subject-error"
     />
@@ -181,14 +198,6 @@
         aria-label="Seznam dodanih nalog">
       </ul>
     </section>
-
-    <section id="accessibility-info" class="accessibility-section" aria-labelledby="accessibility-title">
-  <h2 id="accessibility-title">Dostopnost aplikacije</h2>
-  <p>
-    Aplikacija je zasnovana tako, da podpira uporabo s tipkovnico, jasen fokus,
-    semantičen HTML, dostopna sporočila in uporabo z bralniki zaslona.
-  </p>
-</section>
   </main>
 
   <script src="./src/db.js"></script>

@@ -4,7 +4,6 @@ const taskForm = document.getElementById("task-form");
 const taskList = document.getElementById("task-list");
 
 const enableNotificationsButton = document.getElementById("enable-notifications-button");
-const testNotificationButton = document.getElementById("test-notification-button");
 const notificationStatus = document.getElementById("notification-status");
 const dueRemindersButton = document.getElementById("due-reminders-button");
 
@@ -214,7 +213,7 @@ function cancelEditingTask() {
   submitTaskButton.textContent = "Dodaj nalogo";
   cancelEditButton.hidden = true;
 
-  document.getElementById("task-form-title").textContent = "Dodaj testno nalogo";
+  document.getElementById("task-form-title").textContent = "Dodaj nalogo";
 }
 
 function createTaskElement(task) {
@@ -665,22 +664,6 @@ async function enablePushNotifications() {
   }
 }
 
-async function sendTestNotification() {
-  try {
-    const response = await fetch(`${API_BASE_URL}/push/test`, {
-      method: "POST"
-    });
-
-    if (!response.ok) {
-      throw new Error("Testnega obvestila ni bilo mogoče poslati.");
-    }
-
-    notificationStatus.textContent = "Testno obvestilo je bilo poslano.";
-  } catch (error) {
-    console.error("Napaka pri testnem obvestilu:", error);
-    notificationStatus.textContent = "Testnega obvestila ni bilo mogoče poslati.";
-  }
-}
 
 async function sendDueReminders() {
   try {
@@ -707,16 +690,136 @@ async function sendDueReminders() {
 }
 
 enableNotificationsButton.addEventListener("click", enablePushNotifications);
-testNotificationButton.addEventListener("click", sendTestNotification);
 
 dueRemindersButton.addEventListener("click", sendDueReminders);
 
 cancelEditButton.addEventListener("click", cancelEditingTask);
 
+function parseLocalDate(dateString) {
+  if (!dateString) {
+    return null;
+  }
+
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(year, month - 1, day);
+}
+
+function getStartOfToday() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  return today;
+}
+
+function isSameDay(dateA, dateB) {
+  return dateA.getFullYear() === dateB.getFullYear() &&
+    dateA.getMonth() === dateB.getMonth() &&
+    dateA.getDate() === dateB.getDate();
+}
+
+function getDaysUntil(date) {
+  const today = getStartOfToday();
+  const target = new Date(date);
+  target.setHours(0, 0, 0, 0);
+
+  const difference = target.getTime() - today.getTime();
+  return Math.round(difference / (1000 * 60 * 60 * 24));
+}
+
+function setDashboardText(id, text) {
+  const element = document.getElementById(id);
+
+  if (element) {
+    element.textContent = text;
+  }
+}
+
+function renderDashboard(tasks) {
+  const today = getStartOfToday();
+
+  const activeTasks = tasks.filter(task => task.pendingDelete !== true);
+
+  const tasksWithDueDate = activeTasks
+    .filter(task => task.dueDate)
+    .map(task => ({
+      ...task,
+      dueDateObject: parseLocalDate(task.dueDate)
+    }))
+    .filter(task => task.dueDateObject !== null);
+
+  const upcomingTasks = tasksWithDueDate
+    .filter(task => task.dueDateObject >= today)
+    .sort((a, b) => a.dueDateObject - b.dueDateObject);
+
+  const todayTasks = tasksWithDueDate.filter(task => {
+    return isSameDay(task.dueDateObject, today);
+  });
+
+  const highPriorityTasks = activeTasks.filter(task => {
+    return task.priority === "high";
+  });
+
+  const unsyncedTasks = activeTasks.filter(task => {
+    return task.synced === false || task.pendingUpdate === true;
+  });
+
+  if (upcomingTasks.length > 0) {
+    const nextTask = upcomingTasks[0];
+    const daysUntil = getDaysUntil(nextTask.dueDateObject);
+
+    let dayText = "Rok je danes";
+
+    if (daysUntil === 1) {
+      dayText = "Rok je jutri";
+    } else if (daysUntil > 1) {
+      dayText = `Rok čez ${daysUntil} dni`;
+    }
+
+    setDashboardText("next-task-title", nextTask.title);
+    setDashboardText(
+      "next-task-meta",
+      `${nextTask.subject} · ${dayText} · ${formatDateOnly(nextTask.dueDate)}`
+    );
+  } else {
+    setDashboardText("next-task-title", "Ni prihajajočih rokov");
+    setDashboardText("next-task-meta", "Dodaj nalogo z rokom, da se prikaže tukaj.");
+  }
+
+  setDashboardText("today-task-count", todayTasks.length);
+
+  if (todayTasks.length === 1) {
+    setDashboardText("today-task-text", "Danes imaš 1 nalogo z rokom.");
+  } else if (todayTasks.length > 1) {
+    setDashboardText("today-task-text", `Danes imaš ${todayTasks.length} nalog z rokom.`);
+  } else {
+    setDashboardText("today-task-text", "Danes nimaš označenih rokov.");
+  }
+
+  setDashboardText("high-priority-count", highPriorityTasks.length);
+
+  if (highPriorityTasks.length === 1) {
+    setDashboardText("high-priority-text", "Imaš 1 nalogo z visoko prioriteto.");
+  } else if (highPriorityTasks.length > 1) {
+    setDashboardText("high-priority-text", `Imaš ${highPriorityTasks.length} nalog z visoko prioriteto.`);
+  } else {
+    setDashboardText("high-priority-text", "Trenutno ni nujnih nalog.");
+  }
+
+  setDashboardText("sync-count", unsyncedTasks.length);
+
+  if (unsyncedTasks.length === 1) {
+    setDashboardText("sync-text", "1 obveznost čaka na sinhronizacijo.");
+  } else if (unsyncedTasks.length > 1) {
+    setDashboardText("sync-text", `${unsyncedTasks.length} obveznosti čakajo na sinhronizacijo.`);
+  } else {
+    setDashboardText("sync-text", "Vse obveznosti so sinhronizirane.");
+  }
+}
+
 async function renderTasks() {
   try {
     const allTasks = await window.studySyncDB.getAllTasks();
     const tasks = allTasks.filter(task => task.pendingDelete !== true);
+    renderDashboard(tasks);
 
     taskList.innerHTML = "";
 

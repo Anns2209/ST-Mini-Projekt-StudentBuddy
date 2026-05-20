@@ -1,5 +1,5 @@
-const CACHE_NAME = "studysync-cache-v11";
-const API_CACHE_NAME = "studysync-api-cache-v1";
+const CACHE_NAME = "studysync-cache-v17";
+const API_CACHE_NAME = "studysync-api-cache-v7";
 
 const DB_NAME = "studysync-db";
 const DB_VERSION = 1;
@@ -43,7 +43,6 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
-self.addEventListener("fetch", event => {
 self.addEventListener("fetch", event => {
   const requestUrl = new URL(event.request.url);
 
@@ -299,9 +298,9 @@ async function syncUnsyncedTasksInBackground() {
   /*
     2. Nato obdelamo naloge, ki čakajo na pošiljanje na strežnik.
   */
-  const unsyncedTasks = refreshedTasks.filter(task => {
-  return task.synced === false && task.pendingDelete !== true;
-});
+  const unsyncedTasks = tasks.filter(task => {
+    return task.synced === false && task.pendingDelete !== true;
+  });
 
 for (const task of unsyncedTasks) {
   if (task.pendingUpdate === true && task.serverId) {

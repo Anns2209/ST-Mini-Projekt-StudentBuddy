@@ -1,0 +1,175 @@
+{
+    "metrics": {
+        "http_req_waiting": {
+            "avg": 73.53622,
+            "min": 0.5042,
+            "med": 1.57245,
+            "max": 324.0379,
+            "p(90)": 287.92532,
+            "p(95)": 291.70360500000004
+        },
+        "http_req_tls_handshaking": {
+            "min": 0,
+            "med": 0,
+            "max": 0,
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0
+        },
+        "vus_max": {
+            "min": 1,
+            "max": 1,
+            "value": 1
+        },
+        "http_req_failed": {
+            "passes": 0,
+            "fails": 20,
+            "thresholds": {
+                "rate<0.01": false
+            },
+            "value": 0
+        },
+        "http_req_connecting": {
+            "med": 0,
+            "max": 0.5201,
+            "p(90)": 0,
+            "p(95)": 0.02600500000000037,
+            "avg": 0.026005,
+            "min": 0
+        },
+        "http_req_receiving": {
+            "min": 0,
+            "med": 0.38765,
+            "max": 0.9941,
+            "p(90)": 0.8409600000000002,
+            "p(95)": 0.918385,
+            "avg": 0.36225499999999994
+        },
+        "iterations": {
+            "count": 5,
+            "rate": 0.7705886650106202
+        },
+        "http_req_blocked": {
+            "med": 0,
+            "max": 7.3993,
+            "p(90)": 0,
+            "p(95)": 0.36996500000000526,
+            "avg": 0.369965,
+            "min": 0
+        },
+        "data_received": {
+            "count": 20053,
+            "rate": 3090.5228998915936
+        },
+        "http_req_sending": {
+            "p(90)": 0,
+            "p(95)": 0,
+            "avg": 0,
+            "min": 0,
+            "med": 0,
+            "max": 0
+        },
+        "http_req_duration": {
+            "avg": 73.89847499999999,
+            "min": 0.5047,
+            "med": 1.7524,
+            "max": 324.6047,
+            "p(90)": 288.35329,
+            "p(95)": 292.06986000000006,
+            "thresholds": {
+                "p(95)<500": false
+            }
+        },
+        "checks": {
+            "passes": 35,
+            "fails": 0,
+            "value": 1
+        },
+        "http_reqs": {
+            "count": 20,
+            "rate": 3.0823546600424807
+        },
+        "vus": {
+            "value": 1,
+            "min": 1,
+            "max": 1
+        },
+        "data_sent": {
+            "count": 3911,
+            "rate": 602.7544537713071
+        },
+        "iteration_duration": {
+            "avg": 1297.55298,
+            "min": 1265.3719,
+            "med": 1294.6255,
+            "max": 1339.5069,
+            "p(90)": 1321.8036200000001,
+            "p(95)": 1330.65526
+        },
+        "http_req_duration{expected_response:true}": {
+            "p(90)": 288.35329,
+            "p(95)": 292.06986000000006,
+            "avg": 73.89847499999999,
+            "min": 0.5047,
+            "med": 1.7524,
+            "max": 324.6047
+        }
+    },
+    "root_group": {
+        "name": "",
+        "path": "",
+        "id": "d41d8cd98f00b204e9800998ecf8427e",
+        "groups": {},
+        "checks": {
+                "POST /api/tasks status 201 ali 200": {
+                    "name": "POST /api/tasks status 201 ali 200",
+                    "path": "::POST /api/tasks status 201 ali 200",
+                    "id": "8bc62647639b3480089c5f7406f3adb2",
+                    "passes": 5,
+                    "fails": 0
+                },
+                "POST vrne task": {
+                    "name": "POST vrne task",
+                    "path": "::POST vrne task",
+                    "id": "e85f79c0730fce48a9f4255564e25c4e",
+                    "passes": 5,
+                    "fails": 0
+                },
+                "GET /api/tasks status 200": {
+                    "name": "GET /api/tasks status 200",
+                    "path": "::GET /api/tasks status 200",
+                    "id": "20591d40f4f5e70d1ddc73456195344f",
+                    "passes": 5,
+                    "fails": 0
+                },
+                "GET vrne seznam tasks": {
+                    "name": "GET vrne seznam tasks",
+                    "path": "::GET vrne seznam tasks",
+                    "id": "53759db68698799c6b53f76e3040008f",
+                    "passes": 5,
+                    "fails": 0
+                },
+                "PUT /api/tasks/:serverId status 200": {
+                    "id": "34193e47280c071b8826c08db62db7a3",
+                    "passes": 5,
+                    "fails": 0,
+                    "name": "PUT /api/tasks/:serverId status 200",
+                    "path": "::PUT /api/tasks/:serverId status 200"
+                },
+                "PUT vrne posodobljeno task": {
+                    "id": "6c0bc69784f2f2c4e778f8fb5e248af6",
+                    "passes": 5,
+                    "fails": 0,
+                    "name": "PUT vrne posodobljeno task",
+                    "path": "::PUT vrne posodobljeno task"
+                },
+                "DELETE /api/tasks/:serverId status 200": {
+                    "name": "DELETE /api/tasks/:serverId status 200",
+                    "path": "::DELETE /api/tasks/:serverId status 200",
+                    "id": "edb9570d6fada3ef8b2c0cc81db6f111",
+                    "passes": 5,
+                    "fails": 0
+                }
+            }
+    }
+}

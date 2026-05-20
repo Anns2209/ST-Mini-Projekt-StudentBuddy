@@ -1,43 +1,94 @@
 [
   {
-    "serverId": "d2807ab4-c9c8-420b-83ee-0f71890700f3",
-    "clientId": "1e6c23cc-d5bb-497d-93ce-21849ee08583",
+    "serverId": "533901e9-75fb-4aad-9094-d47511fd98fc",
+    "clientId": "k6-1779275934459-0.04254422387802095",
+    "title": "k6 test naloga",
+    "subject": "Testiranje",
+    "dueDate": "2026-06-09",
+    "priority": "medium",
+    "createdAt": "2026-05-20T11:18:54.459Z",
+    "syncedAt": "2026-05-20T11:18:54.476Z"
+  },
+  {
+    "serverId": "1f690573-1f65-4f2e-a268-3fd93c6380f3",
+    "clientId": "k6-1779275935832-0.2053416573022816",
+    "title": "k6 test naloga",
+    "subject": "Testiranje",
+    "dueDate": "2026-06-09",
+    "priority": "medium",
+    "createdAt": "2026-05-20T11:18:55.832Z",
+    "syncedAt": "2026-05-20T11:18:55.833Z"
+  },
+  {
+    "serverId": "62c1bc00-cc0d-4106-979e-b6d9c11cdb0b",
+    "clientId": "k6-1779276339301-0.228700398903013",
+    "title": "k6 test naloga",
+    "subject": "Testiranje",
+    "dueDate": "2026-06-09",
+    "priority": "medium",
+    "createdAt": "2026-05-20T11:25:39.301Z",
+    "syncedAt": "2026-05-20T11:25:39.309Z"
+  },
+  {
+    "serverId": "eb4a0dc3-6b1b-4ae7-8a04-9da090fa0ee0",
+    "clientId": "4d14fb26-e528-4b93-b283-89e4acbd52ed",
+    "title": "mini projekt predavanja",
+    "subject": "spletne tehnologije",
+    "dueDate": "2026-06-09",
+    "priority": "medium",
+    "createdAt": "2026-05-20T12:49:26.437Z",
+    "syncedAt": "2026-05-20T12:49:26.457Z",
+    "updatedAt": "2026-05-20T13:26:35.329Z"
+  },
+  {
+    "serverId": "08072dc9-4c97-4a15-a75e-a6148b4a86ed",
+    "clientId": "e39e8184-cd31-4c21-ba84-acd59aa558e6",
+    "title": "projekt vaje",
+    "subject": "tzva",
+    "dueDate": "2026-06-04",
+    "priority": "medium",
+    "createdAt": "2026-05-20T12:49:55.574Z",
+    "syncedAt": "2026-05-20T12:49:55.603Z"
+  },
+  {
+    "serverId": "174ac1fb-ee2d-47c9-b900-6198aef2875d",
+    "clientId": "126f9314-6d83-4436-949d-e4c8488e8e6f",
+    "title": "projekt vaje",
+    "subject": "spletne tehnologije",
+    "dueDate": "2026-05-28",
+    "priority": "high",
+    "createdAt": "2026-05-20T12:52:26.423Z",
+    "syncedAt": "2026-05-20T12:52:26.445Z"
+  },
+  {
+    "serverId": "5bfccc65-8ae4-4bb1-a160-d72529cbb317",
+    "clientId": "77557b61-7733-47f7-be14-b270c18da532",
     "title": "ustni izpit",
     "subject": "cir",
     "dueDate": "2026-06-02",
     "priority": "low",
-    "createdAt": "2026-05-19T11:52:12.387Z",
-    "syncedAt": "2026-05-19T11:52:31.023Z"
+    "createdAt": "2026-05-20T13:00:28.329Z",
+    "syncedAt": "2026-05-20T13:00:28.357Z"
   },
   {
-    "serverId": "521eeae9-ee3d-4636-b654-3c6412b7da03",
-    "clientId": "f28b0784-2d82-43fb-a29c-77dd9eae1347",
-    "title": "projekt vaje",
-    "subject": "tzva",
-    "dueDate": "2026-06-03",
-    "priority": "high",
-    "createdAt": "2026-05-19T11:51:02.643Z",
-    "syncedAt": "2026-05-19T12:00:49.533Z",
-    "updatedAt": "2026-05-19T12:10:18.929Z"
-  },
-  {
-    "serverId": "e17fd695-cfdb-4b31-bfb7-dda22dab1acc",
-    "clientId": "fc62584b-1731-4e02-b6de-495c6b728615",
+    "serverId": "8db2cb8e-9af2-4fd0-b0a8-e1621ab73332",
+    "clientId": "e28d2b88-02e4-4e1b-829f-e4f50c527183",
     "title": "kolokvij",
-    "subject": "ita",
-    "dueDate": "2026-06-11",
+    "subject": "pikp",
+    "dueDate": "2026-06-09",
     "priority": "medium",
-    "createdAt": "2026-05-19T12:06:39.126Z",
-    "syncedAt": "2026-05-19T12:06:39.158Z"
+    "createdAt": "2026-05-20T13:23:35.233Z",
+    "syncedAt": "2026-05-20T13:23:35.256Z"
   },
   {
-    "serverId": "6e006864-69ed-4bf8-b20c-e73338d5d0ae",
-    "clientId": "5366150d-22f7-4fa3-b8e8-efdbf2f84142",
+    "serverId": "bcd0c5e6-f28e-4ab9-9c96-fac7618c5b02",
+    "clientId": "7773ce4a-dbb1-496b-a1fd-064af4450a5f",
     "title": "kolokvij",
     "subject": "tzva",
     "dueDate": "2026-06-04",
     "priority": "low",
-    "createdAt": "2026-05-19T12:07:16.895Z",
-    "syncedAt": "2026-05-19T12:07:42.934Z"
+    "createdAt": "2026-05-20T13:25:26.354Z",
+    "syncedAt": "2026-05-20T13:25:26.383Z",
+    "updatedAt": "2026-05-20T13:26:17.724Z"
   }
 ]
