@@ -94,7 +94,7 @@ ST-Mini-Projekt-StudentBuddy/
 │   ├── DOKUMENTACIJA.md
 │   ├── TESTIRANJE.md
 │   ├── DOSTOPNOST.md
-│   ├── PRIMERJAVA_BACKEND.md
+│   
 │   
 │
 └── README.md
