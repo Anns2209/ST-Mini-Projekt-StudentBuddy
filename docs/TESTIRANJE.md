@@ -1,8 +1,6 @@
-# Testiranje aplikacije StudySync / StudentBuddy PWA
+# Testiranje aplikacije
 
 ## 1. Namen testiranja
-
-Namen testiranja je preveriti, ali aplikacija StudySync pravilno deluje kot progresivna spletna aplikacija. Testiranje vključuje osnovne funkcionalnosti, API-klice, delovanje brez povezave, strategije predpomnjenja, Background Sync, potisna obvestila, odzivnost, zmogljivost strežniškega dela in dostopnost.
 
 Testiranje je bilo izvedeno z več pristopi:
 
