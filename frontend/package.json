@@ -1,0 +1,10 @@
+{
+  "name": "studysync-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "scripts": {
+    "dev": "node dev-static-server.cjs",
+    "start": "node dev-static-server.cjs"
+  }
+}

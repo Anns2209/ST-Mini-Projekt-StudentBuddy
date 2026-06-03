@@ -1,5 +1,5 @@
-const CACHE_NAME = "studysync-cache-v17";
-const API_CACHE_NAME = "studysync-api-cache-v7";
+const CACHE_NAME = "studysync-cache-v19";
+const API_CACHE_NAME = "studysync-api-cache-v9";
 
 const DB_NAME = "studysync-db";
 const DB_VERSION = 1;
@@ -64,7 +64,7 @@ self.addEventListener("fetch", event => {
   */
   if (
     event.request.method === "GET" &&
-    requestUrl.origin === "http://localhost:3000" &&
+    requestUrl.origin === "http://localhost:3001" &&
     requestUrl.pathname.startsWith("/api/tasks")
   ) {
     event.respondWith(networkFirstForApi(event.request));

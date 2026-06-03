@@ -6,7 +6,7 @@ const { randomUUID } = require("crypto");
 const webpush = require("web-push");
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 const TASKS_FILE = path.join(__dirname, "data", "tasks.json");
 

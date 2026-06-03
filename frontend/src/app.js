@@ -216,6 +216,42 @@ function cancelEditingTask() {
   document.getElementById("task-form-title").textContent = "Dodaj nalogo";
 }
 
+function createTaskSummary(task) {
+  const priorityText = getPriorityText(task.priority);
+  const syncText = task.synced ? "Sinhronizirano" : "Čaka na sinhronizacijo";
+  const dueDateText = task.dueDate ? formatDateOnly(task.dueDate) : "Rok ni določen";
+
+  return [
+    `Naloga: ${task.title}`,
+    `Predmet: ${task.subject}`,
+    `Rok: ${dueDateText}`,
+    `Prioriteta: ${priorityText}`,
+    `Status: ${syncText}`
+  ].join("\n");
+}
+
+async function copyTaskToClipboard(task) {
+  const summary = createTaskSummary(task);
+
+  try {
+    if (!navigator.clipboard) {
+      throw new Error("Clipboard API ni podprt v tem brskalniku.");
+    }
+
+    await navigator.clipboard.writeText(summary);
+
+    if (notificationStatus) {
+      notificationStatus.textContent = `Povzetek naloge "${task.title}" je bil kopiran v odložišče.`;
+    }
+  } catch (error) {
+    console.error("Napaka pri kopiranju:", error);
+
+    if (notificationStatus) {
+      notificationStatus.textContent = "Kopiranje trenutno ni uspelo.";
+    }
+  }
+}
+
 function createTaskElement(task) {
   const li = document.createElement("li");
   li.className = "task-item";
@@ -252,6 +288,16 @@ function createTaskElement(task) {
   const actions = document.createElement("div");
 actions.className = "task-actions";
 
+const copyButton = document.createElement("button");
+copyButton.type = "button";
+copyButton.className = "copy-button";
+copyButton.textContent = "Kopiraj";
+copyButton.setAttribute("aria-label", `Kopiraj povzetek naloge ${task.title}`);
+
+copyButton.addEventListener("click", async () => {
+  await copyTaskToClipboard(task);
+});
+
 const editButton = document.createElement("button");
 editButton.type = "button";
 editButton.className = "edit-button";
@@ -272,11 +318,14 @@ deleteButton.addEventListener("click", async () => {
   await handleDeleteTask(task);
 });
 
+actions.appendChild(copyButton);
 actions.appendChild(editButton);
 actions.appendChild(deleteButton);
 
 li.appendChild(content);
 li.appendChild(actions);
+
+
 
   return li;
 }

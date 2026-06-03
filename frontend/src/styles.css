@@ -658,3 +658,12 @@ select[aria-invalid="true"] {
     grid-template-columns: 1fr;
   }
 }
+
+.copy-button {
+  background: #0f766e;
+  color: white;
+}
+
+.copy-button:hover {
+  background: #115e59;
+}
