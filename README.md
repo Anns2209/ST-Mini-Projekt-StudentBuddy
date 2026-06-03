@@ -95,7 +95,7 @@ ST-Mini-Projekt-StudentBuddy/
 │   ├── TESTIRANJE.md
 │   ├── DOSTOPNOST.md
 │   ├── PRIMERJAVA_BACKEND.md
-│   └── slike/
+│   
 │
 └── README.md
 ```
@@ -216,18 +216,6 @@ k6 testi se nahajajo v mapi:
 tests/k6/
 ```
 
-Primer zagona CRUD API testa:
-
-```bash
-k6 run tests/k6/tasks-crud-test.js --summary-export tests/results/tasks-crud-summary.json
-```
-
-Primer zagona obremenitvenega testa:
-
-```bash
-k6 run tests/k6/health-load-test.js --summary-export tests/results/health-load-summary.json
-```
-
 Podrobnejši opis testiranja je v dokumentu:
 
 ```text
@@ -310,7 +298,7 @@ backend/data/tasks.json
 backend/data/subscriptions.json
 ```
 
-Za produkcijsko uporabo bi bila primernejša prava podatkovna baza, na primer SQLite, MySQL ali PostgreSQL.
+Za produkcijsko uporabo bi bila primernejša prava podatkovna baza, na primer MySQL ali PostgreSQL.
 
 ---
 

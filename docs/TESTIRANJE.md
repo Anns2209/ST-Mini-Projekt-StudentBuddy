@@ -96,7 +96,7 @@ k6 run tests/k6/tasks-crud-test.js --summary-export tests/results/tasks-crud-sum
 
 Vsi funkcionalni API testi so bili uspešni. Test je preveril dodajanje, branje, urejanje in brisanje obveznosti. Ker aplikacija uporablja JSON datoteko kot preprosto shrambo podatkov, je bil CRUD test izveden zaporedno z enim virtualnim uporabnikom.
 
-Opomba: prag za odzivni čas pri CRUD testu je smiselno nastaviti bolj sproščeno kot pri obremenitvenem testu, saj test vključuje zapisovanje v datoteko `tasks.json`.
+CRUD API test je bil uspešno izveden. Vseh 40 preverjanj je bilo uspešnih, delež neuspešnih HTTP zahtev pa je bil 0.00 %. Test je preveril dodajanje, branje, urejanje in brisanje obveznosti prek endpointov `POST /api/tasks`, `GET /api/tasks`, `PUT /api/tasks/:serverId` in `DELETE /api/tasks/:serverId`. Prag za p95 odzivni čas je bil nastavljen na 1500 ms, ker test vključuje tudi zapisovanje v datoteko `tasks.json`.
 
 ---
 
@@ -181,6 +181,8 @@ Rezultati:
 | Najdaljši odzivni čas | 2.8 ms |
 | Rezultat | Uspešno |
 
+Test `health-load-test.js` je preveril odzivnost backend strežnika pri postopnem povečanju obremenitve do 20 virtualnih uporabnikov. V 40 sekundah je bilo izvedenih 452 HTTP zahtevkov. Vse zahteve so bile uspešne, delež neuspešnih HTTP zahtev je bil 0.00 %, p95 odzivni čas pa 1.54 ms, kar je bistveno pod nastavljenim pragom 500 ms.
+
 ---
 
 ## 7. Testiranje branja nalog pod obremenitvijo
@@ -222,6 +224,8 @@ Rezultati:
 | p95 odzivni čas | 4.35 ms |
 | Najdaljši odzivni čas | 5.87 ms |
 | Rezultat | Uspešno |
+
+Test `tasks-read-load-test.js` je preveril branje seznama obveznosti prek endpointa `GET /api/tasks` pri 10 virtualnih uporabnikih v trajanju 20 sekund. Skupno je bilo izvedenih 200 HTTP zahtevkov in 400 preverjanj. Vsa preverjanja so bila uspešna, delež neuspešnih HTTP zahtev je bil 0.00 %, p95 odzivni čas pa 4.35 ms, kar je pod nastavljenim pragom 500 ms.
 
 ---
 
@@ -412,10 +416,10 @@ Lighthouse rezultati:
 
 | Kategorija     |       Rezultat |
 | -------------- | -------------: |
-| Performance    | vpiši rezultat |
-| Accessibility  | vpiši rezultat |
-| Best Practices | vpiši rezultat |
-| SEO            | vpiši rezultat |
+| Performance    | 100 |
+| Accessibility  | 100 |
+| Best Practices | 100 |
+| SEO            | 90 |
 
 ---
 
@@ -434,35 +438,8 @@ Ker v novejših različicah Lighthouse ni vedno posebne PWA kategorije, so bile 
 
 ---
 
-## 17. Dokazi testiranja
 
-Dokazi testiranja so shranjeni v mapah:
-
-```text
-tests/results/
-docs/slike/
-```
-
-Primeri dokazov:
-
-```text
-tests/results/tasks-crud-summary.json
-tests/results/health-summary.json
-tests/results/health-load-summary.json
-tests/results/tasks-read-load-summary.json
-
-docs/slike/manifest.png
-docs/slike/service-worker.png
-docs/slike/cache-storage.png
-docs/slike/indexeddb.png
-docs/slike/offline-test.png
-docs/slike/push-notification.png
-docs/slike/lighthouse.png
-```
-
----
-
-## 18. Sklep testiranja
+## 17. Sklep testiranja
 
 Testiranje je pokazalo, da aplikacija StudySync pravilno podpira osnovne funkcionalnosti, API-klice, offline delovanje, predpomnjenje, Background Sync, potisna obvestila, odzivnost, zmogljivost strežniškega dela in dostopnost.
 
