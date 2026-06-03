@@ -1,14 +1,8 @@
-# Dokumentacija aplikacije StudySync / StudentBuddy PWA
+# Dokumentacija aplikacije StudySync PWA
 
-## 1. Uvod
+## 1. Opis ideje
 
-StudySync oziroma StudentBuddy je progresivna spletna aplikacija, namenjena organizaciji študijskih obveznosti. Aplikacija študentom omogoča dodajanje, urejanje, brisanje in pregled obveznosti, rokov ter prioritet. Poseben poudarek je na delovanju brez povezave, sinhronizaciji podatkov in dostopnosti.
-
-Aplikacija je razvita kot PWA, kar pomeni, da se lahko obnaša podobno kot nameščena aplikacija, uporablja Service Worker, predpomnjenje, Web App Manifest, lokalno shranjevanje podatkov in napredne zmožnosti v ozadju.
-
----
-
-## 2. Opis ideje
+StudySync je progresivna spletna aplikacija, namenjena organizaciji študijskih obveznosti. Aplikacija študentom omogoča dodajanje, urejanje, brisanje in pregled obveznosti, rokov ter prioritet. Poseben poudarek je na delovanju brez povezave, sinhronizaciji podatkov in dostopnosti.
 
 Ideja aplikacije je rešiti problem organizacije študijskih nalog, rokov in obveznosti. Študenti imajo pogosto več predmetov, različne roke oddaj, izpite, kolokvije in druge zadolžitve. Če aplikacija deluje samo ob internetni povezavi, lahko uporabnik izgubi možnost dodajanja ali pregleda obveznosti v trenutkih, ko povezava ni dostopna.
 
