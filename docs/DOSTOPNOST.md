@@ -1,4 +1,4 @@
-# Poročilo o dostopnosti aplikacije StudySync / StudentBuddy PWA
+# Poročilo o dostopnosti aplikacije 
 
 
 ## 1. Dostopnost kot del načrtovanja
