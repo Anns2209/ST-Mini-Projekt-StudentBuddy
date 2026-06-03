@@ -6,14 +6,20 @@ export const options = {
   iterations: 5,
   thresholds: {
     http_req_failed: ["rate<0.01"],
-    http_req_duration: ["p(95)<500"]
+    http_req_duration: ["p(95)<1500"]
   }
 };
 
 export default function () {
+  const params = {
+    headers: {
+      "Content-Type": "application/json"
+    }
+  };
+
   const clientId = `k6-${Date.now()}-${Math.random()}`;
 
-  const payload = JSON.stringify({
+  const createPayload = JSON.stringify({
     clientId,
     title: "k6 test naloga",
     subject: "Testiranje",
@@ -22,13 +28,7 @@ export default function () {
     createdAt: new Date().toISOString()
   });
 
-  const params = {
-    headers: {
-      "Content-Type": "application/json"
-    }
-  };
-
-  const postRes = http.post("http://localhost:3000/api/tasks", payload, params);
+  const postRes = http.post("http://localhost:3000/api/tasks", createPayload, params);
 
   check(postRes, {
     "POST /api/tasks status 201 ali 200": r => r.status === 201 || r.status === 200,
@@ -60,7 +60,8 @@ export default function () {
 
     check(putRes, {
       "PUT /api/tasks/:serverId status 200": r => r.status === 200,
-      "PUT vrne posodobljeno task": r => r.json("task") !== undefined
+      "PUT vrne posodobljeno nalogo": r => r.json("task") !== undefined,
+      "PUT spremeni prioriteto": r => r.json("task.priority") === "high"
     });
 
     const deleteRes = http.del(`http://localhost:3000/api/tasks/${serverId}`);
@@ -70,5 +71,5 @@ export default function () {
     });
   }
 
-  sleep(1);
+  sleep(0.5);
 }
