@@ -1,35 +1,5 @@
 [
   {
-    "serverId": "533901e9-75fb-4aad-9094-d47511fd98fc",
-    "clientId": "k6-1779275934459-0.04254422387802095",
-    "title": "k6 test naloga",
-    "subject": "Testiranje",
-    "dueDate": "2026-06-09",
-    "priority": "medium",
-    "createdAt": "2026-05-20T11:18:54.459Z",
-    "syncedAt": "2026-05-20T11:18:54.476Z"
-  },
-  {
-    "serverId": "1f690573-1f65-4f2e-a268-3fd93c6380f3",
-    "clientId": "k6-1779275935832-0.2053416573022816",
-    "title": "k6 test naloga",
-    "subject": "Testiranje",
-    "dueDate": "2026-06-09",
-    "priority": "medium",
-    "createdAt": "2026-05-20T11:18:55.832Z",
-    "syncedAt": "2026-05-20T11:18:55.833Z"
-  },
-  {
-    "serverId": "62c1bc00-cc0d-4106-979e-b6d9c11cdb0b",
-    "clientId": "k6-1779276339301-0.228700398903013",
-    "title": "k6 test naloga",
-    "subject": "Testiranje",
-    "dueDate": "2026-06-09",
-    "priority": "medium",
-    "createdAt": "2026-05-20T11:25:39.301Z",
-    "syncedAt": "2026-05-20T11:25:39.309Z"
-  },
-  {
     "serverId": "08072dc9-4c97-4a15-a75e-a6148b4a86ed",
     "clientId": "e39e8184-cd31-4c21-ba84-acd59aa558e6",
     "title": "projekt vaje",
@@ -49,16 +19,6 @@
     "priority": "high",
     "createdAt": "2026-06-03T09:41:55.583Z",
     "syncedAt": "2026-06-03T09:41:55.603Z"
-  },
-  {
-    "serverId": "ed6fec97-3950-4af4-a6d6-8ea0b7981073",
-    "clientId": "e60fbb7d-5b15-4b26-b97c-a65c6851d7b1",
-    "title": "kolokvij",
-    "subject": "pikp",
-    "dueDate": "2026-06-09",
-    "priority": "medium",
-    "createdAt": "2026-06-03T09:44:48.650Z",
-    "syncedAt": "2026-06-03T09:45:28.443Z"
   },
   {
     "serverId": "cbeaedbb-bbde-4d6b-ad73-776ae8b975f3",

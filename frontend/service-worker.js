@@ -1,5 +1,5 @@
-const CACHE_NAME = "studysync-cache-v19";
-const API_CACHE_NAME = "studysync-api-cache-v9";
+const CACHE_NAME = "studysync-cache-v20";
+const API_CACHE_NAME = "studysync-api-cache-v10";
 
 const DB_NAME = "studysync-db";
 const DB_VERSION = 1;

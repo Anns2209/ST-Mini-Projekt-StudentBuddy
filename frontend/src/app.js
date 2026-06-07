@@ -397,6 +397,54 @@ async function getTasksFromServer() {
   return data.tasks || [];
 }
 
+async function pullServerTasksToLocalDB() {
+  try {
+    console.log("Preverjam naloge na strežniku ...");
+
+    const serverTasks = await getTasksFromServer();
+    const localTasks = await window.studySyncDB.getAllTasks();
+
+    const localClientIds = new Set(
+      localTasks
+        .map(task => task.clientId)
+        .filter(Boolean)
+    );
+
+    for (const serverTask of serverTasks) {
+      if (!serverTask.clientId) {
+        continue;
+      }
+
+      const existsLocally = localClientIds.has(serverTask.clientId);
+
+      if (!existsLocally) {
+        const localTask = {
+          clientId: serverTask.clientId,
+          serverId: serverTask.serverId,
+          title: serverTask.title,
+          subject: serverTask.subject,
+          dueDate: serverTask.dueDate,
+          priority: serverTask.priority,
+          createdAt: serverTask.createdAt,
+          syncedAt: serverTask.syncedAt,
+          updatedAt: serverTask.updatedAt,
+          synced: true,
+          pendingUpdate: false,
+          pendingDelete: false
+        };
+
+        await window.studySyncDB.addTask(localTask);
+
+        console.log("Naloga dodana iz strežnika v IndexedDB:", serverTask.title);
+      }
+    }
+
+    await renderTasks();
+  } catch (error) {
+    console.error("Prenos nalog iz strežnika v IndexedDB ni uspel:", error);
+  }
+}
+
 async function repairMissingServerTasks() {
   try {
     console.log("Preverjam, ali lokalne naloge manjkajo na strežniku ...");
@@ -898,7 +946,22 @@ async function renderTasks() {
 
 async function runSync() {
   await syncPendingDeletes();
+
+  /*
+    Najprej prenesemo naloge, ki obstajajo na strežniku,
+    ampak jih lokalna IndexedDB še nima.
+  */
+  await pullServerTasksToLocalDB();
+
+  /*
+    Nato preverimo še obratno:
+    ali kakšna lokalna naloga manjka na strežniku.
+  */
   await repairMissingServerTasks();
+
+  /*
+    Na koncu sinhroniziramo nove ali urejene lokalne naloge.
+  */
   await syncUnsyncedTasks();
 }
 
