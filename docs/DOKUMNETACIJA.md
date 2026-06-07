@@ -16,7 +16,6 @@ Ciljna skupina aplikacije so predvsem:
 
 * študenti,
 * dijaki,
-* tutorji,
 * uporabniki, ki želijo organizirati učne obveznosti,
 * uporabniki z nestabilno internetno povezavo,
 * uporabniki, ki potrebujejo dostopen in pregleden planer.
