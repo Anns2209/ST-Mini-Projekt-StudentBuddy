@@ -13,12 +13,13 @@
   {
     "serverId": "ddb93976-f80a-43ef-a776-8d87451d599a",
     "clientId": "0d466a29-8298-4bde-85d1-42ed07a59ba1",
-    "title": "kolokvij",
+    "title": "kolokvij 2",
     "subject": "tzva",
     "dueDate": "2026-06-04",
     "priority": "high",
     "createdAt": "2026-06-03T09:41:55.583Z",
-    "syncedAt": "2026-06-03T09:41:55.603Z"
+    "syncedAt": "2026-06-03T09:41:55.603Z",
+    "updatedAt": "2026-06-07T15:01:35.901Z"
   },
   {
     "serverId": "cbeaedbb-bbde-4d6b-ad73-776ae8b975f3",
@@ -43,12 +44,13 @@
   {
     "serverId": "0f18bd15-b722-4eee-ba55-35f1a357a6cc",
     "clientId": "89811199-e4ff-4d64-93bf-a1bafdc512e9",
-    "title": "kolokvij",
+    "title": "kolokvij 2",
     "subject": "ita",
     "dueDate": "2026-06-12",
     "priority": "high",
     "createdAt": "2026-06-03T09:46:47.100Z",
-    "syncedAt": "2026-06-03T09:46:47.130Z"
+    "syncedAt": "2026-06-03T09:46:47.130Z",
+    "updatedAt": "2026-06-07T15:02:29.272Z"
   },
   {
     "serverId": "b2a2bc89-1bc1-4edc-8d87-20b6d3b1d68d",
@@ -69,15 +71,5 @@
     "priority": "high",
     "createdAt": "2026-06-07T14:52:22.796Z",
     "syncedAt": "2026-06-07T14:52:22.835Z"
-  },
-  {
-    "serverId": "22ed706c-fc35-44a9-a4c3-ef96a64788b1",
-    "clientId": "d1c3ce60-36f8-461e-96c1-625c8c3ce822",
-    "title": "kolokvij 2",
-    "subject": "pikp",
-    "dueDate": "2026-06-09",
-    "priority": "high",
-    "createdAt": "2026-06-07T14:52:44.680Z",
-    "syncedAt": "2026-06-07T14:52:44.717Z"
   }
 ]
