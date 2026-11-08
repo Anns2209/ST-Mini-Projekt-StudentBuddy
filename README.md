@@ -198,6 +198,25 @@ Pri produkcijski objavi bi bilo treba aplikacijo objaviti prek HTTPS povezave.
 
 ## 8. Testiranje
 
+### Avtomatizirano funkcionalno testiranje (4. naloga)
+
+Pet primerov TC-01 do TC-05 je avtomatiziranih s Playwrightom v `tests/e2e/`.
+Poročilo z utemeljitvijo orodja, sledljivostjo in rezultati je v
+[docs/NALOGA4_POROCILO.md](docs/NALOGA4_POROCILO.md).
+
+V korenski mapi projekta, ob prostih vratih 3000 in 5173:
+
+```bash
+npm ci
+npm ci --prefix backend
+npx playwright install chromium
+npm run test:e2e
+npm run test:e2e:report
+```
+
+Testi sami upravljajo strežnika in uporabljajo začasne podatke, ločene od osebnih zapisov.
+Cevovod je v `.github/workflows/functional-tests.yml`.
+
 Testiranje je razdeljeno na več delov:
 
 * testiranje osnovnih funkcionalnosti,
